@@ -1,0 +1,1757 @@
+{
+  "source": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\ui.xml",
+  "root": {
+    "tag": "hierarchy",
+    "class": "",
+    "resource_id": "",
+    "text": "",
+    "content_desc": "",
+    "package": "",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "clickable": false,
+    "enabled": true,
+    "selected": false,
+    "focused": false,
+    "scrollable": false,
+    "children": [
+      {
+        "tag": "node",
+        "class": "android.widget.FrameLayout",
+        "resource_id": "",
+        "text": "",
+        "content_desc": "",
+        "package": "com.wallet.crypto.trustapp",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 1080,
+          "height": 2168,
+          "right": 1080,
+          "bottom": 2168
+        },
+        "clickable": false,
+        "enabled": true,
+        "selected": false,
+        "focused": false,
+        "scrollable": false,
+        "children": [
+          {
+            "tag": "node",
+            "class": "android.widget.LinearLayout",
+            "resource_id": "",
+            "text": "",
+            "content_desc": "",
+            "package": "com.wallet.crypto.trustapp",
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1080,
+              "height": 2168,
+              "right": 1080,
+              "bottom": 2168
+            },
+            "clickable": false,
+            "enabled": true,
+            "selected": false,
+            "focused": false,
+            "scrollable": false,
+            "children": [
+              {
+                "tag": "node",
+                "class": "android.widget.FrameLayout",
+                "resource_id": "",
+                "text": "",
+                "content_desc": "",
+                "package": "com.wallet.crypto.trustapp",
+                "bounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1080,
+                  "height": 2168,
+                  "right": 1080,
+                  "bottom": 2168
+                },
+                "clickable": false,
+                "enabled": true,
+                "selected": false,
+                "focused": false,
+                "scrollable": false,
+                "children": [
+                  {
+                    "tag": "node",
+                    "class": "android.widget.LinearLayout",
+                    "resource_id": "com.wallet.crypto.trustapp:id/action_bar_root",
+                    "text": "",
+                    "content_desc": "",
+                    "package": "com.wallet.crypto.trustapp",
+                    "bounds": {
+                      "x": 0,
+                      "y": 0,
+                      "width": 1080,
+                      "height": 2168,
+                      "right": 1080,
+                      "bottom": 2168
+                    },
+                    "clickable": false,
+                    "enabled": true,
+                    "selected": false,
+                    "focused": false,
+                    "scrollable": false,
+                    "children": [
+                      {
+                        "tag": "node",
+                        "class": "android.widget.FrameLayout",
+                        "resource_id": "android:id/content",
+                        "text": "",
+                        "content_desc": "",
+                        "package": "com.wallet.crypto.trustapp",
+                        "bounds": {
+                          "x": 0,
+                          "y": 0,
+                          "width": 1080,
+                          "height": 2168,
+                          "right": 1080,
+                          "bottom": 2168
+                        },
+                        "clickable": false,
+                        "enabled": true,
+                        "selected": false,
+                        "focused": false,
+                        "scrollable": false,
+                        "children": [
+                          {
+                            "tag": "node",
+                            "class": "androidx.compose.ui.platform.ComposeView",
+                            "resource_id": "",
+                            "text": "",
+                            "content_desc": "",
+                            "package": "com.wallet.crypto.trustapp",
+                            "bounds": {
+                              "x": 0,
+                              "y": 0,
+                              "width": 1080,
+                              "height": 2168,
+                              "right": 1080,
+                              "bottom": 2168
+                            },
+                            "clickable": false,
+                            "enabled": true,
+                            "selected": false,
+                            "focused": false,
+                            "scrollable": false,
+                            "children": [
+                              {
+                                "tag": "node",
+                                "class": "android.view.View",
+                                "resource_id": "",
+                                "text": "",
+                                "content_desc": "",
+                                "package": "com.wallet.crypto.trustapp",
+                                "bounds": {
+                                  "x": 0,
+                                  "y": 0,
+                                  "width": 1080,
+                                  "height": 2168,
+                                  "right": 1080,
+                                  "bottom": 2168
+                                },
+                                "clickable": false,
+                                "enabled": true,
+                                "selected": false,
+                                "focused": false,
+                                "scrollable": false,
+                                "children": [
+                                  {
+                                    "tag": "node",
+                                    "class": "android.view.View",
+                                    "resource_id": "",
+                                    "text": "",
+                                    "content_desc": "",
+                                    "package": "com.wallet.crypto.trustapp",
+                                    "bounds": {
+                                      "x": 0,
+                                      "y": 0,
+                                      "width": 1080,
+                                      "height": 2168,
+                                      "right": 1080,
+                                      "bottom": 2168
+                                    },
+                                    "clickable": false,
+                                    "enabled": true,
+                                    "selected": false,
+                                    "focused": false,
+                                    "scrollable": false,
+                                    "children": [
+                                      {
+                                        "tag": "node",
+                                        "class": "android.view.View",
+                                        "resource_id": "",
+                                        "text": "",
+                                        "content_desc": "",
+                                        "package": "com.wallet.crypto.trustapp",
+                                        "bounds": {
+                                          "x": 0,
+                                          "y": 0,
+                                          "width": 1080,
+                                          "height": 2168,
+                                          "right": 1080,
+                                          "bottom": 2168
+                                        },
+                                        "clickable": false,
+                                        "enabled": true,
+                                        "selected": false,
+                                        "focused": false,
+                                        "scrollable": false,
+                                        "children": [
+                                          {
+                                            "tag": "node",
+                                            "class": "android.view.View",
+                                            "resource_id": "",
+                                            "text": "",
+                                            "content_desc": "",
+                                            "package": "com.wallet.crypto.trustapp",
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 0,
+                                              "width": 1080,
+                                              "height": 2168,
+                                              "right": 1080,
+                                              "bottom": 2168
+                                            },
+                                            "clickable": false,
+                                            "enabled": true,
+                                            "selected": false,
+                                            "focused": false,
+                                            "scrollable": false,
+                                            "children": [
+                                              {
+                                                "tag": "node",
+                                                "class": "android.view.View",
+                                                "resource_id": "",
+                                                "text": "",
+                                                "content_desc": "",
+                                                "package": "com.wallet.crypto.trustapp",
+                                                "bounds": {
+                                                  "x": 0,
+                                                  "y": 0,
+                                                  "width": 1080,
+                                                  "height": 2168,
+                                                  "right": 1080,
+                                                  "bottom": 2168
+                                                },
+                                                "clickable": false,
+                                                "enabled": true,
+                                                "selected": false,
+                                                "focused": false,
+                                                "scrollable": false,
+                                                "children": [
+                                                  {
+                                                    "tag": "node",
+                                                    "class": "android.view.View",
+                                                    "resource_id": "",
+                                                    "text": "",
+                                                    "content_desc": "",
+                                                    "package": "com.wallet.crypto.trustapp",
+                                                    "bounds": {
+                                                      "x": 0,
+                                                      "y": 1133,
+                                                      "width": 1080,
+                                                      "height": 1035,
+                                                      "right": 1080,
+                                                      "bottom": 2168
+                                                    },
+                                                    "clickable": false,
+                                                    "enabled": true,
+                                                    "selected": false,
+                                                    "focused": false,
+                                                    "scrollable": true,
+                                                    "children": [
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.widget.TextView",
+                                                        "resource_id": "",
+                                                        "text": "\u041f\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435 \u043a\u043e\u0448\u0435\u043b\u0435\u043a, \u0447\u0442\u043e\u0431\u044b \u043d\u0430\u0447\u0430\u0442\u044c \u0442\u043e\u0440\u0433\u043e\u0432\u0430\u0442\u044c \u0438 \u0437\u0430\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 88,
+                                                          "y": 1649,
+                                                          "width": 904,
+                                                          "height": 121,
+                                                          "right": 992,
+                                                          "bottom": 1770
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 88,
+                                                          "y": 1836,
+                                                          "width": 904,
+                                                          "height": 154,
+                                                          "right": 992,
+                                                          "bottom": 1990
+                                                        },
+                                                        "clickable": true,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": [
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.widget.TextView",
+                                                            "resource_id": "",
+                                                            "text": "\u041f\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u044c",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 419,
+                                                              "y": 1880,
+                                                              "width": 242,
+                                                              "height": 66,
+                                                              "right": 661,
+                                                              "bottom": 1946
+                                                            },
+                                                            "clickable": false,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 88,
+                                                          "y": 2023,
+                                                          "width": 904,
+                                                          "height": 63,
+                                                          "right": 992,
+                                                          "bottom": 2086
+                                                        },
+                                                        "clickable": true,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": [
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.widget.TextView",
+                                                            "resource_id": "",
+                                                            "text": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043a\u0440\u0438\u043f\u0442\u043e\u0432\u0430\u043b\u044e\u0442\u0443",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 270,
+                                                              "y": 2067,
+                                                              "width": 540,
+                                                              "height": 19,
+                                                              "right": 810,
+                                                              "bottom": 2086
+                                                            },
+                                                            "clickable": false,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 0,
+                                                          "width": 0,
+                                                          "height": 0,
+                                                          "right": 0,
+                                                          "bottom": 0
+                                                        },
+                                                        "clickable": true,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": [
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.widget.TextView",
+                                                            "resource_id": "",
+                                                            "text": "Perps",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 0,
+                                                              "y": 0,
+                                                              "width": 0,
+                                                              "height": 0,
+                                                              "right": 0,
+                                                              "bottom": 0
+                                                            },
+                                                            "clickable": false,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          },
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "",
+                                                            "text": "",
+                                                            "content_desc": "ChevronRight",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 0,
+                                                              "y": 0,
+                                                              "width": 0,
+                                                              "height": 0,
+                                                              "right": 0,
+                                                              "bottom": 0
+                                                            },
+                                                            "clickable": false,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 0,
+                                                          "width": 0,
+                                                          "height": 0,
+                                                          "right": 0,
+                                                          "bottom": 0
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": true,
+                                                        "children": [
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 0,
+                                                              "y": 0,
+                                                              "width": 0,
+                                                              "height": 0,
+                                                              "right": 0,
+                                                              "bottom": 0
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          },
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 0,
+                                                              "y": 0,
+                                                              "width": 0,
+                                                              "height": 0,
+                                                              "right": 0,
+                                                              "bottom": 0
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          },
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 0,
+                                                              "y": 0,
+                                                              "width": 0,
+                                                              "height": 0,
+                                                              "right": 0,
+                                                              "bottom": 0
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 1133,
+                                                          "width": 783,
+                                                          "height": 120,
+                                                          "right": 783,
+                                                          "bottom": 1253
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": [
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 0,
+                                                              "y": 1133,
+                                                              "width": 783,
+                                                              "height": 120,
+                                                              "right": 783,
+                                                              "bottom": 1253
+                                                            },
+                                                            "clickable": false,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": true,
+                                                            "children": [
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.view.View",
+                                                                "resource_id": "\u041a\u0440\u0438\u043f\u0442\u043e\u0432\u0430\u043b\u044e\u0442\u0430",
+                                                                "text": "",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 44,
+                                                                  "y": 1133,
+                                                                  "width": 409,
+                                                                  "height": 126,
+                                                                  "right": 453,
+                                                                  "bottom": 1259
+                                                                },
+                                                                "clickable": true,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "node",
+                                                                    "class": "android.widget.TextView",
+                                                                    "resource_id": "",
+                                                                    "text": "\u041a\u0440\u0438\u043f\u0442\u043e\u0432\u0430\u043b\u044e\u0442\u0430",
+                                                                    "content_desc": "",
+                                                                    "package": "com.wallet.crypto.trustapp",
+                                                                    "bounds": {
+                                                                      "x": 88,
+                                                                      "y": 1166,
+                                                                      "width": 321,
+                                                                      "height": 54,
+                                                                      "right": 409,
+                                                                      "bottom": 1220
+                                                                    },
+                                                                    "clickable": false,
+                                                                    "enabled": true,
+                                                                    "selected": false,
+                                                                    "focused": false,
+                                                                    "scrollable": false,
+                                                                    "children": []
+                                                                  },
+                                                                  {
+                                                                    "tag": "node",
+                                                                    "class": "android.view.View",
+                                                                    "resource_id": "",
+                                                                    "text": "",
+                                                                    "content_desc": "",
+                                                                    "package": "com.wallet.crypto.trustapp",
+                                                                    "bounds": {
+                                                                      "x": 44,
+                                                                      "y": 1133,
+                                                                      "width": 409,
+                                                                      "height": 120,
+                                                                      "right": 453,
+                                                                      "bottom": 1253
+                                                                    },
+                                                                    "clickable": false,
+                                                                    "enabled": true,
+                                                                    "selected": false,
+                                                                    "focused": false,
+                                                                    "scrollable": false,
+                                                                    "children": []
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.view.View",
+                                                                "resource_id": "WatchlistTab",
+                                                                "text": "",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 453,
+                                                                  "y": 1133,
+                                                                  "width": 330,
+                                                                  "height": 126,
+                                                                  "right": 783,
+                                                                  "bottom": 1259
+                                                                },
+                                                                "clickable": true,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "node",
+                                                                    "class": "android.widget.TextView",
+                                                                    "resource_id": "",
+                                                                    "text": "\u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u0435",
+                                                                    "content_desc": "",
+                                                                    "package": "com.wallet.crypto.trustapp",
+                                                                    "bounds": {
+                                                                      "x": 497,
+                                                                      "y": 1166,
+                                                                      "width": 242,
+                                                                      "height": 54,
+                                                                      "right": 739,
+                                                                      "bottom": 1220
+                                                                    },
+                                                                    "clickable": false,
+                                                                    "enabled": true,
+                                                                    "selected": false,
+                                                                    "focused": false,
+                                                                    "scrollable": false,
+                                                                    "children": []
+                                                                  },
+                                                                  {
+                                                                    "tag": "node",
+                                                                    "class": "android.view.View",
+                                                                    "resource_id": "",
+                                                                    "text": "",
+                                                                    "content_desc": "",
+                                                                    "package": "com.wallet.crypto.trustapp",
+                                                                    "bounds": {
+                                                                      "x": 453,
+                                                                      "y": 1133,
+                                                                      "width": 330,
+                                                                      "height": 120,
+                                                                      "right": 783,
+                                                                      "bottom": 1253
+                                                                    },
+                                                                    "clickable": false,
+                                                                    "enabled": true,
+                                                                    "selected": false,
+                                                                    "focused": false,
+                                                                    "scrollable": false,
+                                                                    "children": []
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "historyIcon",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 783,
+                                                          "y": 1133,
+                                                          "width": 110,
+                                                          "height": 126,
+                                                          "right": 893,
+                                                          "bottom": 1259
+                                                        },
+                                                        "clickable": true,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "assetsLayoutSettingsIcon",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 893,
+                                                          "y": 1133,
+                                                          "width": 132,
+                                                          "height": 126,
+                                                          "right": 1025,
+                                                          "bottom": 1259
+                                                        },
+                                                        "clickable": true,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "node",
+                                                    "class": "android.widget.ScrollView",
+                                                    "resource_id": "",
+                                                    "text": "",
+                                                    "content_desc": "",
+                                                    "package": "com.wallet.crypto.trustapp",
+                                                    "bounds": {
+                                                      "x": 0,
+                                                      "y": 102,
+                                                      "width": 1080,
+                                                      "height": 1031,
+                                                      "right": 1080,
+                                                      "bottom": 1133
+                                                    },
+                                                    "clickable": false,
+                                                    "enabled": true,
+                                                    "selected": false,
+                                                    "focused": false,
+                                                    "scrollable": false,
+                                                    "children": [
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 318,
+                                                          "y": 270,
+                                                          "width": 422,
+                                                          "height": 132,
+                                                          "right": 740,
+                                                          "bottom": 402
+                                                        },
+                                                        "clickable": true,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": [
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.widget.TextView",
+                                                            "resource_id": "",
+                                                            "text": "\u041e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043a\u043e\u0448\u0435\u043b\u0435\u043a 1",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 346,
+                                                              "y": 311,
+                                                              "width": 339,
+                                                              "height": 50,
+                                                              "right": 685,
+                                                              "bottom": 361
+                                                            },
+                                                            "clickable": false,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "walletSelectorCopyIcon",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 740,
+                                                          "y": 270,
+                                                          "width": 132,
+                                                          "height": 132,
+                                                          "right": 872,
+                                                          "bottom": 402
+                                                        },
+                                                        "clickable": true,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 472,
+                                                          "width": 1080,
+                                                          "height": 214,
+                                                          "right": 1080,
+                                                          "bottom": 686
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": [
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "HomeSendButton",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 144,
+                                                              "y": 472,
+                                                              "width": 198,
+                                                              "height": 214,
+                                                              "right": 342,
+                                                              "bottom": 686
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": [
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.widget.TextView",
+                                                                "resource_id": "",
+                                                                "text": "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 145,
+                                                                  "y": 640,
+                                                                  "width": 197,
+                                                                  "height": 46,
+                                                                  "right": 342,
+                                                                  "bottom": 686
+                                                                },
+                                                                "clickable": false,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": []
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "HomeReceiveButton",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 342,
+                                                              "y": 472,
+                                                              "width": 198,
+                                                              "height": 214,
+                                                              "right": 540,
+                                                              "bottom": 686
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": [
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.widget.TextView",
+                                                                "resource_id": "",
+                                                                "text": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 352,
+                                                                  "y": 640,
+                                                                  "width": 179,
+                                                                  "height": 46,
+                                                                  "right": 531,
+                                                                  "bottom": 686
+                                                                },
+                                                                "clickable": false,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": []
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "HomeSwapButton",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 540,
+                                                              "y": 472,
+                                                              "width": 198,
+                                                              "height": 214,
+                                                              "right": 738,
+                                                              "bottom": 686
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": [
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.widget.TextView",
+                                                                "resource_id": "",
+                                                                "text": "\u041e\u0431\u043c\u0435\u043d",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 577,
+                                                                  "y": 640,
+                                                                  "width": 125,
+                                                                  "height": 46,
+                                                                  "right": 702,
+                                                                  "bottom": 686
+                                                                },
+                                                                "clickable": false,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": []
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "HomeBuyButton",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 738,
+                                                              "y": 472,
+                                                              "width": 198,
+                                                              "height": 214,
+                                                              "right": 936,
+                                                              "bottom": 686
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": [
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.widget.TextView",
+                                                                "resource_id": "",
+                                                                "text": "\u041f\u043e\u043a\u0443\u043f\u043a\u0430",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 758,
+                                                                  "y": 640,
+                                                                  "width": 159,
+                                                                  "height": 46,
+                                                                  "right": 917,
+                                                                  "bottom": 686
+                                                                },
+                                                                "clickable": false,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": []
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 763,
+                                                          "width": 1080,
+                                                          "height": 249,
+                                                          "right": 1080,
+                                                          "bottom": 1012
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": true,
+                                                        "children": [
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "bannerSlide",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 44,
+                                                              "y": 763,
+                                                              "width": 992,
+                                                              "height": 249,
+                                                              "right": 1036,
+                                                              "bottom": 1012
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": [
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.view.View",
+                                                                "resource_id": "",
+                                                                "text": "",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 88,
+                                                                  "y": 800,
+                                                                  "width": 176,
+                                                                  "height": 176,
+                                                                  "right": 264,
+                                                                  "bottom": 976
+                                                                },
+                                                                "clickable": false,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": []
+                                                              },
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.widget.TextView",
+                                                                "resource_id": "",
+                                                                "text": "Hyperliquid live with 200+ markets, 0% markup on fees",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 297,
+                                                                  "y": 807,
+                                                                  "width": 695,
+                                                                  "height": 104,
+                                                                  "right": 992,
+                                                                  "bottom": 911
+                                                                },
+                                                                "clickable": false,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": []
+                                                              },
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.widget.TextView",
+                                                                "resource_id": "",
+                                                                "text": "Explore now",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 297,
+                                                                  "y": 922,
+                                                                  "width": 226,
+                                                                  "height": 46,
+                                                                  "right": 523,
+                                                                  "bottom": 968
+                                                                },
+                                                                "clickable": false,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": []
+                                                              },
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.view.View",
+                                                                "resource_id": "",
+                                                                "text": "",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 66,
+                                                                  "y": 774,
+                                                                  "width": 44,
+                                                                  "height": 44,
+                                                                  "right": 110,
+                                                                  "bottom": 818
+                                                                },
+                                                                "clickable": false,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": []
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 102,
+                                                          "width": 1080,
+                                                          "height": 132,
+                                                          "right": 1080,
+                                                          "bottom": 234
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": [
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "topBarSettingsIcon",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 11,
+                                                              "y": 102,
+                                                              "width": 132,
+                                                              "height": 132,
+                                                              "right": 143,
+                                                              "bottom": 234
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          },
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 143,
+                                                              "y": 102,
+                                                              "width": 805,
+                                                              "height": 132,
+                                                              "right": 948,
+                                                              "bottom": 234
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": [
+                                                              {
+                                                                "tag": "node",
+                                                                "class": "android.widget.TextView",
+                                                                "resource_id": "",
+                                                                "text": "\u041f\u043e\u0438\u0441\u043a",
+                                                                "content_desc": "",
+                                                                "package": "com.wallet.crypto.trustapp",
+                                                                "bounds": {
+                                                                  "x": 253,
+                                                                  "y": 139,
+                                                                  "width": 673,
+                                                                  "height": 58,
+                                                                  "right": 926,
+                                                                  "bottom": 197
+                                                                },
+                                                                "clickable": false,
+                                                                "enabled": true,
+                                                                "selected": false,
+                                                                "focused": false,
+                                                                "scrollable": false,
+                                                                "children": []
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.widget.TextView",
+                                                            "resource_id": "topBarBalance",
+                                                            "text": "0,00\u00a0$",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 473,
+                                                              "y": 138,
+                                                              "width": 157,
+                                                              "height": 61,
+                                                              "right": 630,
+                                                              "bottom": 199
+                                                            },
+                                                            "clickable": false,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          },
+                                                          {
+                                                            "tag": "node",
+                                                            "class": "android.view.View",
+                                                            "resource_id": "topBarQrIcon",
+                                                            "text": "",
+                                                            "content_desc": "",
+                                                            "package": "com.wallet.crypto.trustapp",
+                                                            "bounds": {
+                                                              "x": 948,
+                                                              "y": 102,
+                                                              "width": 132,
+                                                              "height": 132,
+                                                              "right": 1080,
+                                                              "bottom": 234
+                                                            },
+                                                            "clickable": true,
+                                                            "enabled": true,
+                                                            "selected": false,
+                                                            "focused": false,
+                                                            "scrollable": false,
+                                                            "children": []
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "node",
+                                                "class": "android.view.View",
+                                                "resource_id": "",
+                                                "text": "",
+                                                "content_desc": "",
+                                                "package": "com.wallet.crypto.trustapp",
+                                                "bounds": {
+                                                  "x": 44,
+                                                  "y": 2086,
+                                                  "width": 992,
+                                                  "height": 82,
+                                                  "right": 1036,
+                                                  "bottom": 2168
+                                                },
+                                                "clickable": false,
+                                                "enabled": true,
+                                                "selected": false,
+                                                "focused": false,
+                                                "scrollable": false,
+                                                "children": [
+                                                  {
+                                                    "tag": "node",
+                                                    "class": "android.view.View",
+                                                    "resource_id": "HomeNavigationButton",
+                                                    "text": "",
+                                                    "content_desc": "",
+                                                    "package": "com.wallet.crypto.trustapp",
+                                                    "bounds": {
+                                                      "x": 50,
+                                                      "y": 2092,
+                                                      "width": 196,
+                                                      "height": 76,
+                                                      "right": 246,
+                                                      "bottom": 2168
+                                                    },
+                                                    "clickable": true,
+                                                    "enabled": true,
+                                                    "selected": false,
+                                                    "focused": false,
+                                                    "scrollable": false,
+                                                    "children": [
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "itemIcon",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 115,
+                                                          "y": 2114,
+                                                          "width": 66,
+                                                          "height": 54,
+                                                          "right": 181,
+                                                          "bottom": 2168
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.widget.TextView",
+                                                        "resource_id": "",
+                                                        "text": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 0,
+                                                          "width": 0,
+                                                          "height": 0,
+                                                          "right": 0,
+                                                          "bottom": 0
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "node",
+                                                    "class": "android.view.View",
+                                                    "resource_id": "TrendingTokenNavigationButton",
+                                                    "text": "",
+                                                    "content_desc": "",
+                                                    "package": "com.wallet.crypto.trustapp",
+                                                    "bounds": {
+                                                      "x": 246,
+                                                      "y": 2092,
+                                                      "width": 196,
+                                                      "height": 76,
+                                                      "right": 442,
+                                                      "bottom": 2168
+                                                    },
+                                                    "clickable": true,
+                                                    "enabled": true,
+                                                    "selected": false,
+                                                    "focused": false,
+                                                    "scrollable": false,
+                                                    "children": [
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "itemIcon",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 311,
+                                                          "y": 2114,
+                                                          "width": 66,
+                                                          "height": 54,
+                                                          "right": 377,
+                                                          "bottom": 2168
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.widget.TextView",
+                                                        "resource_id": "",
+                                                        "text": "\u0420\u044b\u043d\u043a\u0438",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 0,
+                                                          "width": 0,
+                                                          "height": 0,
+                                                          "right": 0,
+                                                          "bottom": 0
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "node",
+                                                    "class": "android.view.View",
+                                                    "resource_id": "PerpsNavigationButton",
+                                                    "text": "",
+                                                    "content_desc": "",
+                                                    "package": "com.wallet.crypto.trustapp",
+                                                    "bounds": {
+                                                      "x": 638,
+                                                      "y": 2092,
+                                                      "width": 196,
+                                                      "height": 76,
+                                                      "right": 834,
+                                                      "bottom": 2168
+                                                    },
+                                                    "clickable": true,
+                                                    "enabled": true,
+                                                    "selected": false,
+                                                    "focused": false,
+                                                    "scrollable": false,
+                                                    "children": [
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "itemIcon",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 703,
+                                                          "y": 2114,
+                                                          "width": 66,
+                                                          "height": 54,
+                                                          "right": 769,
+                                                          "bottom": 2168
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.widget.TextView",
+                                                        "resource_id": "",
+                                                        "text": "\u0411\u0435\u0441\u0441\u0440\u043e\u0447\u043d\u044b\u0435 \u0444\u044c\u044e\u0447\u0435\u0440\u0441\u044b",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 0,
+                                                          "width": 0,
+                                                          "height": 0,
+                                                          "right": 0,
+                                                          "bottom": 0
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "node",
+                                                    "class": "android.view.View",
+                                                    "resource_id": "DiscoverNavigationButton",
+                                                    "text": "",
+                                                    "content_desc": "",
+                                                    "package": "com.wallet.crypto.trustapp",
+                                                    "bounds": {
+                                                      "x": 834,
+                                                      "y": 2092,
+                                                      "width": 196,
+                                                      "height": 76,
+                                                      "right": 1030,
+                                                      "bottom": 2168
+                                                    },
+                                                    "clickable": true,
+                                                    "enabled": true,
+                                                    "selected": false,
+                                                    "focused": false,
+                                                    "scrollable": false,
+                                                    "children": [
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.view.View",
+                                                        "resource_id": "itemIcon",
+                                                        "text": "",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 899,
+                                                          "y": 2114,
+                                                          "width": 66,
+                                                          "height": 54,
+                                                          "right": 965,
+                                                          "bottom": 2168
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      },
+                                                      {
+                                                        "tag": "node",
+                                                        "class": "android.widget.TextView",
+                                                        "resource_id": "",
+                                                        "text": "\u041f\u043e\u0434\u0440\u043e\u0431\u043d\u0435\u0435",
+                                                        "content_desc": "",
+                                                        "package": "com.wallet.crypto.trustapp",
+                                                        "bounds": {
+                                                          "x": 0,
+                                                          "y": 0,
+                                                          "width": 0,
+                                                          "height": 0,
+                                                          "right": 0,
+                                                          "bottom": 0
+                                                        },
+                                                        "clickable": false,
+                                                        "enabled": true,
+                                                        "selected": false,
+                                                        "focused": false,
+                                                        "scrollable": false,
+                                                        "children": []
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "node",
+                                                "class": "android.view.View",
+                                                "resource_id": "",
+                                                "text": "",
+                                                "content_desc": "",
+                                                "package": "com.wallet.crypto.trustapp",
+                                                "bounds": {
+                                                  "x": 463,
+                                                  "y": 2020,
+                                                  "width": 154,
+                                                  "height": 148,
+                                                  "right": 617,
+                                                  "bottom": 2168
+                                                },
+                                                "clickable": true,
+                                                "enabled": true,
+                                                "selected": false,
+                                                "focused": false,
+                                                "scrollable": false,
+                                                "children": [
+                                                  {
+                                                    "tag": "node",
+                                                    "class": "android.view.View",
+                                                    "resource_id": "",
+                                                    "text": "",
+                                                    "content_desc": "\u041e\u0431\u043c\u0435\u043d",
+                                                    "package": "com.wallet.crypto.trustapp",
+                                                    "bounds": {
+                                                      "x": 463,
+                                                      "y": 2020,
+                                                      "width": 154,
+                                                      "height": 148,
+                                                      "right": 617,
+                                                      "bottom": 2168
+                                                    },
+                                                    "clickable": false,
+                                                    "enabled": true,
+                                                    "selected": false,
+                                                    "focused": false,
+                                                    "scrollable": false,
+                                                    "children": []
+                                                  },
+                                                  {
+                                                    "tag": "node",
+                                                    "class": "android.view.View",
+                                                    "resource_id": "itemIcon",
+                                                    "text": "",
+                                                    "content_desc": "",
+                                                    "package": "com.wallet.crypto.trustapp",
+                                                    "bounds": {
+                                                      "x": 507,
+                                                      "y": 2064,
+                                                      "width": 66,
+                                                      "height": 66,
+                                                      "right": 573,
+                                                      "bottom": 2130
+                                                    },
+                                                    "clickable": false,
+                                                    "enabled": true,
+                                                    "selected": false,
+                                                    "focused": false,
+                                                    "scrollable": false,
+                                                    "children": []
+                                                  },
+                                                  {
+                                                    "tag": "node",
+                                                    "class": "android.widget.Button",
+                                                    "resource_id": "",
+                                                    "text": "",
+                                                    "content_desc": "",
+                                                    "package": "com.wallet.crypto.trustapp",
+                                                    "bounds": {
+                                                      "x": 463,
+                                                      "y": 2020,
+                                                      "width": 154,
+                                                      "height": 148,
+                                                      "right": 617,
+                                                      "bottom": 2168
+                                                    },
+                                                    "clickable": false,
+                                                    "enabled": true,
+                                                    "selected": false,
+                                                    "focused": false,
+                                                    "scrollable": false,
+                                                    "children": []
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "node",
+                                                "class": "android.view.View",
+                                                "resource_id": "",
+                                                "text": "",
+                                                "content_desc": "",
+                                                "package": "com.wallet.crypto.trustapp",
+                                                "bounds": {
+                                                  "x": 0,
+                                                  "y": 0,
+                                                  "width": 0,
+                                                  "height": 0,
+                                                  "right": 0,
+                                                  "bottom": 0
+                                                },
+                                                "clickable": false,
+                                                "enabled": true,
+                                                "selected": false,
+                                                "focused": false,
+                                                "scrollable": false,
+                                                "children": []
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

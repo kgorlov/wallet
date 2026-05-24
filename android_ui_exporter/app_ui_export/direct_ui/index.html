@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Direct Parsed UI</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #101114;
+      color: #f5f5f7;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      display: grid;
+      place-items: start center;
+      padding: 18px;
+    }
+    .phone {
+      position: relative;
+      width: min(100%, 460px);
+      aspect-ratio: 1080 / 2168;
+      background: #111216;
+      overflow: hidden;
+      border-radius: 30px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .55);
+      border: 1px solid #2a2c32;
+    }
+    .node { position: absolute; }
+    .content-panel {
+      position: absolute;
+      background: #111216;
+    }
+    .tab-divider {
+      position: absolute;
+      background: rgba(255, 255, 255, .08);
+    }
+    .carousel-dots {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12%;
+    }
+    .carousel-dots i {
+      display: block;
+      width: 16%;
+      aspect-ratio: 1;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .24);
+    }
+    .carousel-dots i.active {
+      width: 42%;
+      aspect-ratio: 4 / 1;
+      background: rgba(255, 255, 255, .88);
+    }
+    .bottom-fade {
+      position: absolute;
+      background: linear-gradient(transparent, rgba(17, 18, 22, .9));
+      pointer-events: none;
+    }
+    .top-icon, .copy-icon, .tab-icon {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      color: #e6e6ea;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .settings::after {
+      content: "";
+      position: absolute;
+      right: 28%;
+      top: 22%;
+      width: 10%;
+      aspect-ratio: 1;
+      border-radius: 999px;
+      background: #ff4d5a;
+    }
+    .search-pill {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 4%;
+      padding: 0 5%;
+      border-radius: 999px;
+      background: #2b2c31;
+      color: #8f9097;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .search-glyph {
+      color: #d7d7dc;
+      font-size: 1.2em;
+      transform: translateY(-2%);
+    }
+    .wallet-chip {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4%;
+      border-radius: 999px;
+      background: #27282d;
+      color: #f4f4f7;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 0 4%;
+    }
+    .wallet-chip span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .wallet-chip b { font-size: 1.35em; line-height: 1; }
+    .wallet-chip::after {
+      content: "";
+      position: absolute;
+      right: 4%;
+      top: -7%;
+      width: 7%;
+      aspect-ratio: 1;
+      background: #ff4d5a;
+      border-radius: 999px;
+    }
+    .action {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10%;
+      color: #f4f4f7;
+      font-weight: 750;
+    }
+    .action-icon {
+      width: 64%;
+      aspect-ratio: 1;
+      border-radius: 24%;
+      background: #27282d;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      line-height: 1;
+    }
+    .action-label {
+      font-size: 14px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .banner {
+      position: absolute;
+      display: grid;
+      grid-template-columns: 23% 1fr;
+      align-items: center;
+      gap: 4%;
+      border-radius: 22px;
+      background: #1f2025;
+      border: 2px solid #2d3139;
+      padding: 0 5%;
+    }
+    .banner-art {
+      width: 100%;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 24%;
+      background: linear-gradient(135deg, #27f58a, #8757ff 54%, #ffdb3b);
+      transform: rotate(-8deg);
+    }
+    .banner-art span {
+      color: #101114;
+      font-size: clamp(22px, 5vw, 40px);
+      font-weight: 900;
+    }
+    .banner-copy {
+      min-width: 0;
+      display: grid;
+      gap: 8%;
+    }
+    .banner-copy strong {
+      display: block;
+      color: #f5f5f7;
+      font-size: 15px;
+      line-height: 1.22;
+    }
+    .banner-copy em {
+      display: block;
+      color: #35f58a;
+      font-style: normal;
+      font-weight: 850;
+      font-size: 13px;
+    }
+    .tab {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      color: #8f9097;
+      font-size: 17px;
+      font-weight: 850;
+      padding-left: 5%;
+    }
+    .tab.active {
+      color: #f4f4f7;
+    }
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: 0;
+      height: 6%;
+      min-height: 3px;
+      border-radius: 999px;
+      background: #35f58a;
+    }
+    .tab-icon {
+      color: #b8b8bf;
+      font-size: 25px;
+    }
+    .empty-card {
+      position: absolute;
+      border-radius: 24px;
+      background: #2b2c2f;
+    }
+    .empty-art {
+      position: absolute;
+      left: 38%;
+      top: 7%;
+      width: 24%;
+      aspect-ratio: 1;
+      border-radius: 20%;
+      background: linear-gradient(135deg, #2cf58d, #e6ff4c 55%, #1024ff);
+      transform: rotate(8deg);
+      box-shadow: 0 0 0 10px rgba(53, 245, 138, .08);
+    }
+    .empty-art div {
+      position: absolute;
+      inset: 25%;
+      background: #111216;
+      border-radius: 18%;
+    }
+    .empty-title {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      color: #f4f4f7;
+      text-align: center;
+      font-size: 18px;
+      line-height: 1.12;
+      font-weight: 900;
+      padding: 0 4%;
+      overflow: hidden;
+    }
+    .primary-button {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: #35f58a;
+      color: #07140d;
+      font-size: 22px;
+      font-weight: 900;
+    }
+    .secondary-button {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(53, 245, 138, .16);
+      color: #35f58a;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .bottom-bar {
+      position: absolute;
+      border-radius: 28px 28px 0 0;
+      background: rgba(18, 18, 22, .96);
+      box-shadow: 0 -12px 34px rgba(0, 0, 0, .35);
+    }
+    .nav-item {
+      position: absolute;
+      display: grid;
+      grid-template-rows: 54% 1fr;
+      place-items: center;
+      color: #a8a8af;
+      font-weight: 800;
+      font-size: 11px;
+      text-align: center;
+    }
+    .nav-item strong {
+      font-size: 25px;
+      line-height: 1;
+      color: #bfc0c7;
+    }
+    .nav-item.selected {
+      color: #35f58a;
+      border-radius: 999px;
+      background: rgba(53, 245, 138, .16);
+    }
+    .nav-item.selected strong { color: #35f58a; }
+    .nav-item.center {
+      border-radius: 50%;
+      background: #35f58a;
+      color: #101114;
+      transform: translateY(-28%);
+      grid-template-rows: 70% 1fr;
+      font-size: 10px;
+    }
+    .nav-item.center strong {
+      color: #101114;
+      font-size: 30px;
+    }
+    .generic-text {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      color: #f4f4f7;
+      font-size: 13px;
+      font-weight: 750;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <main class="phone" aria-label="Direct parsed UI reconstruction">
+<div class="content-panel" style="left:0.000000%;top:52.260148%;width:100.000000%;height:47.739852%;"></div>
+<div class="carousel-dots" style="left:46.296296%;top:49.354244%;width:7.407407%;height:0.830258%;"><i></i><i class="active"></i></div>
+<div class="tab-divider" style="left:0.000000%;top:58.071956%;width:100.000000%;height:0.138376%;"></div>
+<div class="bottom-fade" style="left:0.000000%;top:88.929889%;width:100.000000%;height:11.070111%;"></div>
+<div class="top-icon settings" style="left:1.018519%;top:4.704797%;width:12.222222%;height:6.088561%;">⚙</div>
+<div class="search-pill" style="left:13.240741%;top:4.704797%;width:74.537037%;height:6.088561%;"><span class="search-glyph">⌕</span><span>Поиск</span></div>
+<div class="top-icon qr" style="left:87.777778%;top:4.704797%;width:12.222222%;height:6.088561%;">▣</div>
+<div class="wallet-chip" style="left:29.444444%;top:12.453875%;width:39.074074%;height:6.088561%;"><span>Основной кошелек 1</span><b>›</b></div>
+<div class="copy-icon" style="left:68.518519%;top:12.453875%;width:12.222222%;height:6.088561%;">□</div>
+<div class="action" style="left:13.333333%;top:21.771218%;width:18.333333%;height:9.870849%;"><div class="action-icon">↗</div><div class="action-label">Отправить</div></div>
+<div class="action" style="left:31.666667%;top:21.771218%;width:18.333333%;height:9.870849%;"><div class="action-icon">↓</div><div class="action-label">Получить</div></div>
+<div class="action" style="left:50.000000%;top:21.771218%;width:18.333333%;height:9.870849%;"><div class="action-icon">⇄</div><div class="action-label">Обмен</div></div>
+<div class="action" style="left:68.333333%;top:21.771218%;width:18.333333%;height:9.870849%;"><div class="action-icon">+</div><div class="action-label">Покупка</div></div>
+<div class="banner" style="left:4.074074%;top:35.193727%;width:91.851852%;height:11.485240%;"><div class="banner-art"><span>H</span></div><div class="banner-copy"><strong>Hyperliquid live with 200+ markets, 0% markup on fees</strong><em>Explore now</em></div></div>
+<div class="tab active" style="left:4.074074%;top:52.260148%;width:37.870370%;height:5.811808%;">Криптовалюта</div>
+<div class="tab" style="left:41.944444%;top:52.260148%;width:30.555556%;height:5.811808%;">Избранное</div>
+<div class="tab-icon" style="left:72.500000%;top:52.260148%;width:10.185185%;height:5.811808%;">↺</div>
+<div class="tab-icon sliders" style="left:82.685185%;top:52.260148%;width:12.222222%;height:5.811808%;">☷</div>
+<div class="empty-card" style="left:4.074074%;top:59.040590%;width:91.851852%;height:37.822878%;"><div class="empty-art"><div></div></div></div>
+<div class="empty-title" style="left:8.148148%;top:76.060886%;width:83.703704%;height:5.581181%;">Пополните кошелек, чтобы начать торговать и зарабатывать</div>
+<div class="primary-button" style="left:8.148148%;top:84.686347%;width:83.703704%;height:7.103321%;">Пополнить</div>
+<div class="secondary-button" style="left:8.148148%;top:93.311808%;width:83.703704%;height:2.905904%;">Получить криптовалюту</div>
+<div class="bottom-bar" style="left:4.074074%;top:93.173432%;width:91.851852%;height:6.826568%;"></div>
+<div class="nav-item selected" style="left:4.629630%;top:96.494465%;width:18.148148%;height:3.505535%;"><strong>⌂</strong><span>Главная</span></div>
+<div class="nav-item" style="left:22.777778%;top:96.494465%;width:18.148148%;height:3.505535%;"><strong>↗</strong><span>Рынки</span></div>
+<div class="nav-item center" style="left:42.870370%;top:93.173432%;width:14.259259%;height:6.826568%;"><strong>⇄</strong><span>Обмен</span></div>
+<div class="nav-item" style="left:59.074074%;top:96.494465%;width:18.148148%;height:3.505535%;"><strong>♜</strong><span>Бессрочные...</span></div>
+<div class="nav-item" style="left:77.222222%;top:96.494465%;width:18.148148%;height:3.505535%;"><strong>◉</strong><span>Подробнее</span></div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/splash_bg" />
+    <item android:gravity="center" android:height="183.0dp" android:width="200.0dp">
+        <bitmap android:src="@drawable/ic_splash" android:tileMode="disabled" />
+    </item>
+</layer-list>

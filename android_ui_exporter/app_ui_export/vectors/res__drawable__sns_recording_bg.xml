@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/sns_cameraBackground" />
+    <corners android:radius="@dimen/sns_margin_small" />
+    <padding android:left="@dimen/sns_margin_small" android:top="@dimen/sns_margin_tiny" android:right="@dimen/sns_margin_small" android:bottom="@dimen/sns_margin_tiny" />
+</shape>

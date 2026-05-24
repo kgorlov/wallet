@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Captured UI Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #101114;
+      color: #f4f4f5;
+      font: 14px/1.35 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(360px, 1fr) 390px;
+      gap: 18px;
+      padding: 18px;
+    }
+    .stage {
+      min-width: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: auto;
+    }
+    .phone {
+      position: relative;
+      width: min(100%, 460px);
+      background: #18191d;
+      border: 1px solid #2b2d33;
+      border-radius: 30px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .55);
+      overflow: hidden;
+    }
+    .shot {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      aspect-ratio: 1080 / 2168;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .12s ease;
+    }
+    body.show-overlay .overlay { opacity: 1; }
+    .hit {
+      position: absolute;
+      border: 2px solid rgba(73, 255, 142, .9);
+      background: rgba(73, 255, 142, .12);
+      color: #111827;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2px;
+      pointer-events: auto;
+    }
+    .hit.text {
+      border-color: rgba(59, 130, 246, .95);
+      background: rgba(59, 130, 246, .15);
+      color: #eff6ff;
+    }
+    .hit.scroll {
+      border-style: dashed;
+      border-color: rgba(250, 204, 21, .95);
+      background: rgba(250, 204, 21, .08);
+    }
+    .hit span {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 10px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, .8);
+    }
+    .fallback {
+      width: 100%;
+      aspect-ratio: 1080 / 2168;
+      display: grid;
+      place-items: center;
+      color: #a1a1aa;
+      padding: 24px;
+      text-align: center;
+    }
+    .panel {
+      min-width: 0;
+      height: calc(100vh - 36px);
+      overflow: auto;
+      background: #18191d;
+      border: 1px solid #2b2d33;
+      border-radius: 10px;
+      padding: 14px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 17px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      color: #d4d4d8;
+    }
+    .controls input { width: 18px; height: 18px; }
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .metric {
+      background: #202126;
+      border: 1px solid #30323a;
+      border-radius: 8px;
+      padding: 9px;
+    }
+    .metric b {
+      display: block;
+      font-size: 18px;
+      line-height: 1.1;
+    }
+    .metric span {
+      display: block;
+      color: #a1a1aa;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .note {
+      color: #a1a1aa;
+      border-top: 1px solid #30323a;
+      border-bottom: 1px solid #30323a;
+      padding: 10px 0;
+      margin-bottom: 14px;
+    }
+    ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 7px;
+    }
+    li {
+      padding: 0 0 7px;
+      border-bottom: 1px solid #2b2d33;
+    }
+    li b {
+      display: block;
+      color: #f4f4f5;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+    li span {
+      display: block;
+      color: #a1a1aa;
+      font-size: 11px;
+      margin-top: 2px;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; padding: 10px; }
+      .panel { height: auto; }
+      .phone { width: min(100%, 460px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="layout">
+    <section class="stage">
+      <div class="phone">
+        <img class="shot" src="frame0.png" alt="Captured screen">
+        <div class="overlay">
+<div class="hit scroll" style="left:0.000000%;top:52.260148%;width:100.000000%;height:47.739852%;z-index:3;" title="View | View | 0,1133 1080x1035"></div>
+<div class="hit text" style="left:8.148148%;top:76.060886%;width:83.703704%;height:5.581181%;z-index:4;" title="Пополните кошелек, чтобы начать торговать и зарабатывать | TextView | 88,1649 904x121"><span>Пополните кошелек, чтобы начать торговать и зарабатывать</span></div>
+<div class="hit target" style="left:8.148148%;top:84.686347%;width:83.703704%;height:7.103321%;z-index:5;" title="View | View | 88,1836 904x154"></div>
+<div class="hit text" style="left:38.796296%;top:86.715867%;width:22.407407%;height:3.044280%;z-index:6;" title="Пополнить | TextView | 419,1880 242x66"><span>Пополнить</span></div>
+<div class="hit target" style="left:8.148148%;top:93.311808%;width:83.703704%;height:2.905904%;z-index:7;" title="View | View | 88,2023 904x63"></div>
+<div class="hit text" style="left:25.000000%;top:95.341328%;width:50.000000%;height:0.876384%;z-index:8;" title="Получить криптовалюту | TextView | 270,2067 540x19"><span>Получить криптовалюту</span></div>
+<div class="hit scroll" style="left:0.000000%;top:52.260148%;width:72.500000%;height:5.535055%;z-index:9;" title="View | View | 0,1133 783x120"></div>
+<div class="hit target" style="left:4.074074%;top:52.260148%;width:37.870370%;height:5.811808%;z-index:10;" title="Криптовалюта | View | 44,1133 409x126"><span>Криптовалюта</span></div>
+<div class="hit text" style="left:8.148148%;top:53.782288%;width:29.722222%;height:2.490775%;z-index:11;" title="Криптовалюта | TextView | 88,1166 321x54"><span>Криптовалюта</span></div>
+<div class="hit target" style="left:41.944444%;top:52.260148%;width:30.555556%;height:5.811808%;z-index:12;" title="WatchlistTab | View | 453,1133 330x126"><span>WatchlistTab</span></div>
+<div class="hit text" style="left:46.018519%;top:53.782288%;width:22.407407%;height:2.490775%;z-index:13;" title="Избранное | TextView | 497,1166 242x54"><span>Избранное</span></div>
+<div class="hit target" style="left:72.500000%;top:52.260148%;width:10.185185%;height:5.811808%;z-index:14;" title="historyIcon | View | 783,1133 110x126"><span>historyIcon</span></div>
+<div class="hit target" style="left:82.685185%;top:52.260148%;width:12.222222%;height:5.811808%;z-index:15;" title="assetsLayoutSettingsIcon | View | 893,1133 132x126"><span>assetsLayoutSettingsIcon</span></div>
+<div class="hit target" style="left:29.444444%;top:12.453875%;width:39.074074%;height:6.088561%;z-index:16;" title="View | View | 318,270 422x132"></div>
+<div class="hit text" style="left:32.037037%;top:14.345018%;width:31.388889%;height:2.306273%;z-index:17;" title="Основной кошелек 1 | TextView | 346,311 339x50"><span>Основной кошелек 1</span></div>
+<div class="hit target" style="left:68.518519%;top:12.453875%;width:12.222222%;height:6.088561%;z-index:18;" title="walletSelectorCopyIcon | View | 740,270 132x132"><span>walletSelectorCopyIcon</span></div>
+<div class="hit target" style="left:13.333333%;top:21.771218%;width:18.333333%;height:9.870849%;z-index:19;" title="HomeSendButton | View | 144,472 198x214"><span>HomeSendButton</span></div>
+<div class="hit text" style="left:13.425926%;top:29.520295%;width:18.240741%;height:2.121771%;z-index:20;" title="Отправить | TextView | 145,640 197x46"><span>Отправить</span></div>
+<div class="hit target" style="left:31.666667%;top:21.771218%;width:18.333333%;height:9.870849%;z-index:21;" title="HomeReceiveButton | View | 342,472 198x214"><span>HomeReceiveButton</span></div>
+<div class="hit text" style="left:32.592593%;top:29.520295%;width:16.574074%;height:2.121771%;z-index:22;" title="Получить | TextView | 352,640 179x46"><span>Получить</span></div>
+<div class="hit target" style="left:50.000000%;top:21.771218%;width:18.333333%;height:9.870849%;z-index:23;" title="HomeSwapButton | View | 540,472 198x214"><span>HomeSwapButton</span></div>
+<div class="hit text" style="left:53.425926%;top:29.520295%;width:11.574074%;height:2.121771%;z-index:24;" title="Обмен | TextView | 577,640 125x46"><span>Обмен</span></div>
+<div class="hit target" style="left:68.333333%;top:21.771218%;width:18.333333%;height:9.870849%;z-index:25;" title="HomeBuyButton | View | 738,472 198x214"><span>HomeBuyButton</span></div>
+<div class="hit text" style="left:70.185185%;top:29.520295%;width:14.722222%;height:2.121771%;z-index:26;" title="Покупка | TextView | 758,640 159x46"><span>Покупка</span></div>
+<div class="hit scroll" style="left:0.000000%;top:35.193727%;width:100.000000%;height:11.485240%;z-index:27;" title="View | View | 0,763 1080x249"></div>
+<div class="hit target" style="left:4.074074%;top:35.193727%;width:91.851852%;height:11.485240%;z-index:28;" title="bannerSlide | View | 44,763 992x249"><span>bannerSlide</span></div>
+<div class="hit text" style="left:27.500000%;top:37.223247%;width:64.351852%;height:4.797048%;z-index:29;" title="Hyperliquid live with 200+ markets, 0% markup on fees | TextView | 297,807 695x104"><span>Hyperliquid live with 200+ markets, 0% markup on fees</span></div>
+<div class="hit text" style="left:27.500000%;top:42.527675%;width:20.925926%;height:2.121771%;z-index:30;" title="Explore now | TextView | 297,922 226x46"><span>Explore now</span></div>
+<div class="hit target" style="left:1.018519%;top:4.704797%;width:12.222222%;height:6.088561%;z-index:31;" title="topBarSettingsIcon | View | 11,102 132x132"><span>topBarSettingsIcon</span></div>
+<div class="hit target" style="left:13.240741%;top:4.704797%;width:74.537037%;height:6.088561%;z-index:32;" title="View | View | 143,102 805x132"></div>
+<div class="hit text" style="left:23.425926%;top:6.411439%;width:62.314815%;height:2.675277%;z-index:33;" title="Поиск | TextView | 253,139 673x58"><span>Поиск</span></div>
+<div class="hit text" style="left:43.796296%;top:6.365314%;width:14.537037%;height:2.813653%;z-index:34;" title="0,00 $ | TextView | 473,138 157x61"><span>0,00 $</span></div>
+<div class="hit target" style="left:87.777778%;top:4.704797%;width:12.222222%;height:6.088561%;z-index:35;" title="topBarQrIcon | View | 948,102 132x132"><span>topBarQrIcon</span></div>
+<div class="hit target" style="left:4.629630%;top:96.494465%;width:18.148148%;height:3.505535%;z-index:36;" title="HomeNavigationButton | View | 50,2092 196x76"><span>HomeNavigationButton</span></div>
+<div class="hit target" style="left:22.777778%;top:96.494465%;width:18.148148%;height:3.505535%;z-index:37;" title="TrendingTokenNavigationButton | View | 246,2092 196x76"><span>TrendingTokenNavigationButton</span></div>
+<div class="hit target" style="left:59.074074%;top:96.494465%;width:18.148148%;height:3.505535%;z-index:38;" title="PerpsNavigationButton | View | 638,2092 196x76"><span>PerpsNavigationButton</span></div>
+<div class="hit target" style="left:77.222222%;top:96.494465%;width:18.148148%;height:3.505535%;z-index:39;" title="DiscoverNavigationButton | View | 834,2092 196x76"><span>DiscoverNavigationButton</span></div>
+<div class="hit target" style="left:42.870370%;top:93.173432%;width:14.259259%;height:6.826568%;z-index:40;" title="View | View | 463,2020 154x148"></div>
+<div class="hit text" style="left:42.870370%;top:93.173432%;width:14.259259%;height:6.826568%;z-index:41;" title="Обмен | View | 463,2020 154x148"><span>Обмен</span></div>
+        </div>
+      </div>
+    </section>
+    <aside class="panel">
+      <h1>Captured UI preview</h1>
+      <label class="controls">
+        <input id="overlayToggle" type="checkbox">
+        <span>Show UIAutomator overlay</span>
+      </label>
+      <div class="metrics">
+        <div class="metric"><b>1080x2168</b><span>hierarchy canvas</span></div>
+        <div class="metric"><b>real captured frame</b><span>visual source</span></div>
+        <div class="metric"><b>39</b><span>interactive/text nodes</span></div>
+        <div class="metric"><b>15</b><span>text nodes</span></div>
+      </div>
+      <div class="note">The visible phone is a captured frame. The optional overlay shows parsed hierarchy targets from ui_hierarchy.json.</div>
+      <ol>
+<li><b>View</b><span>View | depth 12 | 0,1133 1080x1035</span></li>
+<li><b>Пополните кошелек, чтобы начать торговать и зарабатывать</b><span>TextView | depth 13 | 88,1649 904x121</span></li>
+<li><b>View</b><span>View | depth 13 | 88,1836 904x154</span></li>
+<li><b>Пополнить</b><span>TextView | depth 14 | 419,1880 242x66</span></li>
+<li><b>View</b><span>View | depth 13 | 88,2023 904x63</span></li>
+<li><b>Получить криптовалюту</b><span>TextView | depth 14 | 270,2067 540x19</span></li>
+<li><b>View</b><span>View | depth 14 | 0,1133 783x120</span></li>
+<li><b>Криптовалюта</b><span>View | depth 15 | 44,1133 409x126</span></li>
+<li><b>Криптовалюта</b><span>TextView | depth 16 | 88,1166 321x54</span></li>
+<li><b>WatchlistTab</b><span>View | depth 15 | 453,1133 330x126</span></li>
+<li><b>Избранное</b><span>TextView | depth 16 | 497,1166 242x54</span></li>
+<li><b>historyIcon</b><span>View | depth 13 | 783,1133 110x126</span></li>
+<li><b>assetsLayoutSettingsIcon</b><span>View | depth 13 | 893,1133 132x126</span></li>
+<li><b>View</b><span>View | depth 13 | 318,270 422x132</span></li>
+<li><b>Основной кошелек 1</b><span>TextView | depth 14 | 346,311 339x50</span></li>
+<li><b>walletSelectorCopyIcon</b><span>View | depth 13 | 740,270 132x132</span></li>
+<li><b>HomeSendButton</b><span>View | depth 14 | 144,472 198x214</span></li>
+<li><b>Отправить</b><span>TextView | depth 15 | 145,640 197x46</span></li>
+<li><b>HomeReceiveButton</b><span>View | depth 14 | 342,472 198x214</span></li>
+<li><b>Получить</b><span>TextView | depth 15 | 352,640 179x46</span></li>
+<li><b>HomeSwapButton</b><span>View | depth 14 | 540,472 198x214</span></li>
+<li><b>Обмен</b><span>TextView | depth 15 | 577,640 125x46</span></li>
+<li><b>HomeBuyButton</b><span>View | depth 14 | 738,472 198x214</span></li>
+<li><b>Покупка</b><span>TextView | depth 15 | 758,640 159x46</span></li>
+<li><b>View</b><span>View | depth 13 | 0,763 1080x249</span></li>
+<li><b>bannerSlide</b><span>View | depth 14 | 44,763 992x249</span></li>
+<li><b>Hyperliquid live with 200+ markets, 0% markup on fees</b><span>TextView | depth 15 | 297,807 695x104</span></li>
+<li><b>Explore now</b><span>TextView | depth 15 | 297,922 226x46</span></li>
+<li><b>topBarSettingsIcon</b><span>View | depth 14 | 11,102 132x132</span></li>
+<li><b>View</b><span>View | depth 14 | 143,102 805x132</span></li>
+<li><b>Поиск</b><span>TextView | depth 15 | 253,139 673x58</span></li>
+<li><b>0,00 $</b><span>TextView | depth 14 | 473,138 157x61</span></li>
+<li><b>topBarQrIcon</b><span>View | depth 14 | 948,102 132x132</span></li>
+<li><b>HomeNavigationButton</b><span>View | depth 12 | 50,2092 196x76</span></li>
+<li><b>TrendingTokenNavigationButton</b><span>View | depth 12 | 246,2092 196x76</span></li>
+<li><b>PerpsNavigationButton</b><span>View | depth 12 | 638,2092 196x76</span></li>
+<li><b>DiscoverNavigationButton</b><span>View | depth 12 | 834,2092 196x76</span></li>
+<li><b>View</b><span>View | depth 11 | 463,2020 154x148</span></li>
+<li><b>Обмен</b><span>View | depth 12 | 463,2020 154x148</span></li>
+      </ol>
+    </aside>
+  </main>
+  <script>
+    const toggle = document.getElementById('overlayToggle');
+    toggle.addEventListener('change', () => {
+      document.body.classList.toggle('show-overlay', toggle.checked);
+    });
+  </script>
+</body>
+</html>

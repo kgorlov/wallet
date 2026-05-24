@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple android:color="?colorControlHighlight"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@id/sns_bg_file_item">
+        <shape>
+            <stroke android:width="1.0dp" android:color="@color/sns_color_neutral_20" android:dashWidth="4.0dp" android:dashGap="4.0dp" />
+            <corners android:radius="@dimen/sns_file_attachment_corner_radius" />
+            <solid android:color="@color/sns_file_bg_v2_color" />
+        </shape>
+    </item>
+</ripple>

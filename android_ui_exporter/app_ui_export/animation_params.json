@@ -1,0 +1,29 @@
+[
+  {
+    "source": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\animation_logs.txt",
+    "line": 1,
+    "duration_ms": null,
+    "properties": [],
+    "interpolator_guess": null,
+    "target_guess": null,
+    "raw": "05-23 10:35:13.019 W/MPEG4Writer(12431): 0-duration samples found: 1"
+  },
+  {
+    "source": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\animation_logs.txt",
+    "line": 2,
+    "duration_ms": null,
+    "properties": [],
+    "interpolator_guess": null,
+    "target_guess": null,
+    "raw": "05-23 10:35:13.020 D/MPEG4Writer(12431): Duration from tracks range is [0, 8994555] us"
+  },
+  {
+    "source": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\animation_logs.txt",
+    "line": 3,
+    "duration_ms": null,
+    "properties": [],
+    "interpolator_guess": null,
+    "target_guess": null,
+    "raw": "05-23 10:35:13.023 D/MPEG4Writer(12431): Top 5 write durations(microseconds): #1:29 #2:30 #3:39 #4:48 #5:78"
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "package": "com.wallet.crypto.trustapp",
+  "out_dir": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export",
+  "apk": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\_work\\apk\\app.apk",
+  "resources": {
+    "apktool_src": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\_work\\apktool_src",
+    "copied": {
+      "extracted_res": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\extracted_res",
+      "images": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\images",
+      "vectors": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\vectors",
+      "animations": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\animations",
+      "fonts": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\fonts"
+    },
+    "warnings": []
+  },
+  "dynamic_resources": {
+    "attempted": false,
+    "copied": 0,
+    "error": "Skipped. Use --include-private-app-data only for owned/authorized apps."
+  },
+  "ui_hierarchy": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\ui_hierarchy.json",
+  "screenrecord": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\animation.mp4",
+  "animation_logs": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\animation_logs.txt",
+  "animation_params_count": 3,
+  "generated_code": "C:\\Users\\user\\Desktop\\wallet\\android_ui_exporter\\app_ui_export\\generated\\flutter_ui\\lib\\main.dart"
+}

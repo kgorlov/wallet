@@ -1,0 +1,36 @@
+# Archives and downloaded bundles
+*.zip
+*.7z
+*.rar
+
+# Android / Java build outputs
+**/build/
+**/.gradle/
+**/*.apk
+**/*.ap_
+**/*.idsig
+**/*.dex
+**/*.class
+
+# Exporter scratch output from unpacked APKs
+android_ui_exporter/app_ui_export/_work/
+android_ui_exporter/app_ui_export/extracted_res/
+
+# External reference repositories kept locally
+trust-wallet-android-source/
+trust-wallet-ios/
+
+# Local verification captures
+phone_capture/
+video_frames/
+
+# Generated preview screenshots and diffs
+trust-wallet-pwa/preview*.png
+trust-wallet-pwa/target*.png
+trust-wallet-pwa/diff*.png
+
+# OS / IDE / temp files
+.DS_Store
+Thumbs.db
+*.tmp
+*.log

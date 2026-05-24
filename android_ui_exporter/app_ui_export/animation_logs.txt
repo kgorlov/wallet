@@ -1,0 +1,3 @@
+05-23 10:35:13.019 W/MPEG4Writer(12431): 0-duration samples found: 1
+05-23 10:35:13.020 D/MPEG4Writer(12431): Duration from tracks range is [0, 8994555] us
+05-23 10:35:13.023 D/MPEG4Writer(12431): Top 5 write durations(microseconds): #1:29 #2:30 #3:39 #4:48 #5:78

@@ -1,0 +1,11 @@
+<resources>
+    <color name="trust_primary">#2E91DB</color>
+    <color name="trust_primary_dark">#1E76CE</color>
+    <color name="trust_text">#313849</color>
+    <color name="trust_muted">#6B7280</color>
+    <color name="trust_divider">#E7EAF0</color>
+    <color name="trust_green">#2FBB4F</color>
+    <color name="trust_red">#F7506C</color>
+    <color name="trust_bg">#111216</color>
+    <color name="trust_bg_deep">#0C0D10</color>
+</resources>
