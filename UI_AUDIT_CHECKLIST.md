@@ -1,5 +1,7 @@
 # Trust UI Audit Checklist
 
+Home canonical reference: `HOME_REFERENCE_SPEC.md`. The user-provided funded Home screenshot from 2026-05-29 is the only valid Home top target; older local Home captures are historical and must not drive Home top layout.
+
 Дата аудита: 2026-05-24  
 Референс: `com.wallet.crypto.trustapp`  
 Наша сборка: `com.wallet.crypto.trustvisual`  
@@ -16,18 +18,21 @@
 - [x] Убрать фейковые системные Android-кнопки `квадрат / круг / треугольник` снизу.
 - [x] Проверить, не остается ли лишний нижний отступ после удаления фейковой системной панели.
 - [x] Сравнить высоту нижнего navbar с Trust Wallet: текущий визуально занимает похожую зону, но активная кнопка Perps нарисована вручную и выглядит грубее.
-- [ ] Унифицировать bottom nav assets: `bottom-nav-home`, `bottom-nav-markets`, `bottom-nav-perps`, `bottom-nav-discover`, `bottom-nav-favorites`.
+- [x] Унифицировать bottom nav: runtime больше не использует `bottom-nav-home`, `bottom-nav-markets`, `bottom-nav-perps`, `bottom-nav-discover`, `bottom-nav-favorites`; единый native Canvas nav рисуется из одного метода, а build guard не пакует `assets/ui`.
 - [x] Перерисовать активный `Perps` nav asset в стиле референса, сейчас активный pill с `%` заметно отличается от оригинального значка.
 - [x] Проверить клики bottom nav после скролла на всех вкладках: Home, Markets, Swap, Perps, Discover.
-- [ ] Проверить, что при переходе между вкладками сбрасывается только нужный `scrollY`, без потери выбранных фильтров там, где Trust Wallet сохраняет состояние.
+- [x] Проверить, что при переходе между вкладками сбрасывается только нужный `scrollY`, без потери выбранных фильтров там, где Trust Wallet сохраняет состояние: Markets и Perps больше не делят network/provider/sort/category state; подтверждено `03c2_market_network_selected` + `05a_perps_provider_sheet` в `phone_capture/audit_20260528_164841`.
 - [x] Проверить статусбар: в нашей сборке статусбар рисуется asset'ом; нужен сравнительный цвет, отступ, иконки, время.
 - [x] Проверить отсутствие случайных затемнений/масок после закрытия sheets и modal.
-- [ ] Проверить все текстовые строки на mojibake/битую кириллицу. В `MainActivity.java` большая часть уже UTF-8, но старые строки могли остаться.
+- [x] Проверить все текстовые строки на mojibake/битую кириллицу. В `MainActivity.java` найден и исправлен fallback-символ DOGE `Ð` -> `D`; повторный поиск чистый.
 
 ## Главная Вкладка
 
+- [x] 2026-05-29 Home canonical reference saved in `HOME_REFERENCE_SPEC.md`; old Home captures are no longer valid Home top targets. Latest device pass verified in `phone_capture/audit_20260530_194648/01_home.png`.
+- [x] 2026-05-30 Dev secret Home menu: top-right scan area opens balance/test actions; presets update Home total + token rows, test send/receive create History rows, and the fake drawn status bar is disabled. Verified on device in `phone_capture/dev_menu_verify_20260530_201108` and `phone_capture/dev_history_verify_20260530_201200`.
+
 - [x] Сравнить верхний блок: настройки, search pill, scan, wallet chip, copy.
-- [ ] Проверить красную точку на настройках/wallet chip: позиция и наличие совпадают не полностью.
+- [x] Проверить красную точку на настройках/wallet chip: сдвинута ближе к верхнему правому углу шестерёнки и проверена на Home.
 - [x] Проверить tap zones: настройки, поиск, сканер, wallet chip, copy.
 - [x] Проверить sheet кошелька: в референсе это список кошельков; у нас safe/demo sheet, нужно привести ближе к Trust Wallet.
 - [x] Проверить copy address sheet/toast: у нас демонстрационный текст, нужно сделать визуально как референс.
@@ -42,10 +47,10 @@
 - [x] NFT tab: проверить пустое состояние и иконку.
 - [x] History icon: открывает историю, но нужно сравнить экран истории по точности.
 - [x] Manage icon: открывает manage screen, но точность переключателей/радиокнопок нужно проверить.
-- [ ] Home scroll: работает, но нужно довести sticky-поведение верхних asset tabs как в Trust Wallet.
+- [x] Home scroll: sticky asset tabs no longer expose clipped token rows under the fixed header.
 - [x] После скролла на Home topbar Trust Wallet меняет состояние; у нас Canvas-вариант может не полностью повторять collapsed header.
 - [x] Проверить переход в Perps section на Home после скролла.
-- [ ] Проверить Earn и History секции на Home после скролла: в референсе другие блоки и состояния.
+- [x] Проверить Earn и History секции на Home после скролла: scrolled Home проверен, Earn/Exclusive подписи локализованы и влезают.
 
 ## Markets
 
@@ -53,20 +58,20 @@
 - [x] Сортировка открывается после скролла.
 - [x] Убраны фейковые системные кнопки снизу.
 - [x] Сравнить верхнюю шапку `Markets`: title, search icon, отступы.
-- [ ] `Predictions` card: размер, радиус, иконка, текст, tap action.
-- [ ] `Meme Rush` card: размер, радиус, иконка, текст, tap action.
-- [ ] Top traded cards: у нас частично статичные/частично live; нужно привести к референсу по карточкам, логотипам и графикам.
-- [ ] Панель категорий сейчас нативно дорисована: визуально стала рабочей, но не совпадает пиксельно с референсом.
+- [x] `Predictions` card: размер, радиус, иконка, текст и tap action проверены; tap открывает отдельный detail, smoke-кадр `03a_predictions_detail`.
+- [x] `Meme Rush` card: размер, радиус, иконка, текст и tap action проверены; tap открывает отдельный detail, smoke-кадр `03b_meme_rush_detail`.
+- [x] Top traded cards: теперь берут отдельный live/fallback срез `topTradedCoins()` по 24h volume, используют реальные token logos и крупный sparkline/fill внутри карточки, не зависят от текущего фильтра списка.
+- [x] Панель категорий нативно дорисована и уплотнена ближе к референсу: chips уменьшены до 88px высоты, активный fill/текст выровнены, Markets и Perps используют единый pill style.
 - [x] Проверить категории: Star/Favorites, Hot tokens, Top Gainers, RWA, Meme, DeFi.
 - [x] Категория `Star` сейчас меняет `marketFilter = 1`, но фильтрация избранного фактически не реализована.
 - [x] `Hot tokens` возвращает базовый список.
 - [x] `Top Gainers` фильтрует положительный change, но в референсе сортировка/категория отличается.
 - [x] `RWA`, `Meme`, `DeFi` фильтры используют простые substring списки; нужно сверить состав токенов с референсом.
-- [ ] Вторая строка фильтров: `Сеть`, `Рыночная капитализация`, `24h` должна совпадать по ширине и визуальному стилю.
-- [ ] Sheet `Сеть`: сейчас общие пункты `Все сети`, `Ethereum`, `BNB Smart Chain`, `Solana`; нужно проверить порядок и подписи как в Trust Wallet.
+- [x] Вторая строка фильтров: `Сеть`, `Рыночная капитализация`, `24h` приведена к pill + caret стилю; длинные выбранные подписи теперь ужимаются внутри pill без наложения на caret, подтверждено `03c2_market_network_selected` в `phone_capture/audit_20260528_170738`.
+- [x] Sheet `Сеть`: порядок и подписи `Все сети`, `Ethereum`, `BNB Smart Chain`, `Solana` проверены кадром `03c_market_network_sheet`.
 - [x] Sheet `Сортировка`: сейчас `Рыночная капитализация`, `Top Gainers`, `Объем (24 ч.)`; нужно сверить с референсом.
 - [x] Sheet `Период`: работает, но сами графики не перестраиваются по 24h/7d/30d.
-- [ ] Список Market rows: нужно добавить настоящие логотипы токенов, сейчас круг с первой буквой.
+- [x] Список Market rows: реальные crypto token logos подключены через общий `tokenIconAsset`; текущий список больше не падает в круг с первой буквой для BTC, ETH, USDT, USDC, BNB, XRP, TRX, DOGE, SOL, LINK, UNI, ATOM, ZEC, AAVE, ONDO, PEPE, HYPE.
 - [x] Market rows: проверить левый отступ, размер тикера, subtitle `MCap / Vol`, правые price/change.
 - [x] Market rows: sparkline должен иметь заливку/цвет как Trust Wallet; сейчас простая линия.
 - [x] Market rows: при скролле верхняя строка частично уходит под фильтры; нужно добавить более мягкий clip/градиент или старт ниже.
@@ -81,12 +86,12 @@
 - [x] Убран дубль названия монет в списке (`BNB / BNB` и похожие).
 - [x] Убран грязный `bottom-nav-perps.png`, где были зашиты ZEC/цена/график.
 - [x] Фильтры теперь фиксированные и кликабельные после скролла.
-- [ ] Активный bottom nav для Perps нужно перерисовать ближе к референсу; текущий `%` вместо оригинальной иконки.
+- [x] Активный bottom nav для Perps теперь рисует отдельную вкладку `Бесср.` с `%` icon и активным pill; tap по активной зоне на Perps больше не уводит в Rewards.
 - [x] Верхняя шапка: history icon, title `Бесср.`, settings icon, отступы.
 - [x] Hero/card: infinity artwork, текст, кнопка `Депозит`; нужно сравнить высоты, радиусы и позицию.
 - [x] Deposit tap сейчас открывает generic safe sheet; нужно сделать mock deposit screen/sheet как в референсе.
 - [x] Search bar: открывает общий поиск; нужно сравнить по placeholder и поведению.
-- [ ] Category chips: Star, Popular, New, Crypto, Stocks.
+- [x] Category chips: star, top, new, crypto, stocks are localized and fit without overlap.
 - [x] `Stocks` визуально есть, но фильтрация stock/perps не реализована отдельно.
 - [x] Provider filter: `Все поставщики` должен открывать provider sheet, сейчас переиспользуется `SHEET_MARKET_NETWORK`.
 - [x] Sort filter: `Объем (24 ч.)` открывает сортировку, но sheet текст market-like; нужен perps-specific.
@@ -98,14 +103,14 @@
 - [x] History icon в Perps: сейчас открывает общий transaction history; нужен perps history.
 - [x] Settings icon: сейчас safe sheet; нужен perps settings screen/sheet.
 - [x] Проверить, чтобы после смены фильтра Perps `scrollY` сбрасывался.
-- [ ] Проверить, что live/fallback цены не противоречат референсу на одном экране.
+- [x] Live/fallback цены: fallback baseline для BTC, ETH, USDT, BNB, XRP, USDC, SOL приведен к сохраненным audit-кадрам; API merge обновляет те же rows/cards без полной замены состава.
 
 ## Swap
 
 - [x] Верхняя шапка: close icon, title `Своп`, settings icon.
 - [x] From block: amount, Fund pill, token state.
 - [x] To block: amount, Select token.
-- [ ] Reverse button: меняет направление, но визуально нужно сравнить состояние.
+- [x] Reverse button: выбранный token/Fund визуально меняются местами; подтверждено отдельными smoke-кадрами.
 - [x] Slider/button bottom: сейчас статичный `Сдвиньте вправо для свопа`; нужно проверить disabled/enabled состояния.
 - [x] Settings sheet открывается и выглядит близко: `Проскальзывание`, `Маршрут`, `MEV-защита`.
 - [x] Settings sheet нужно сделать интерактивным: выбор slippage, route, MEV toggle.
@@ -121,7 +126,7 @@
 
 - [x] Сравнить full Discover screen с референсом: search/dApp input, cards, sections.
 - [x] Search field opens modal/search; нужно проверить placeholder и dApp URL mode.
-- [ ] Earn/Staking card открывает discover detail; нужно заменить generic detail на референсный flow.
+- [x] Earn/Staking card открывает discover detail; generic detail заменен на staking flow с выбором актива/APY и проверен smoke-кадром `08a_discover_staking_detail`.
 - [x] Quick links: Trust Wallet website, Support Center, Help dApp.
 - [x] Discover scroll: сейчас общий `scrollY`, нужно проверить, не уезжает bottom nav и top content.
 - [x] Discover row taps: сейчас generic detail; нужно сделать отдельные состояния.
@@ -154,7 +159,7 @@
 - [x] Perps history icon должен открывать perps history, а не общий history.
 - [x] Сравнить empty state, title, back/close button.
 - [x] Проверить back/close hitbox.
-- [ ] Проверить скролл history, если есть список.
+- [x] Проверить скролл history, если есть список.
 
 ## Manage Assets
 
@@ -167,11 +172,11 @@
 
 ## Sheets / Bottom Sheets
 
-- [ ] Общая высота sheet сейчас `1260..2268`; сравнить с Trust Wallet на разных sheets.
-- [ ] Close tap работает через `y < 1260` или close zone; нужно проверить, не закрывается ли sheet случайно при tap по dim area.
-- [ ] Sheet title typography.
-- [ ] Sheet row height and dividers.
-- [ ] Selected checkmark style.
+- [x] Общая высота sheet больше не фиксированная `1260..2268`: короткие filter/settings sheets используют адаптивный `sheetBottom()` без лишней пустоты снизу, token/action sheets остаются полноразмерными.
+- [x] Close/dim tap: dim и close zone закрывают sheet, а search/gap внутри sheet не закрывают и не выбирают случайный пункт; проверено smoke-кадрами `03c1_market_network_gap_tap` и `07b1_swap_token_search_tap`.
+- [x] Sheet title typography: title/close уменьшены и выровнены ближе к reference bottom sheet (`50px` title, `58px` close).
+- [x] Sheet row height and dividers: option rows используют более тонкий divider (`1.5f`), компактный text size и единый layout для plain/network/provider rows.
+- [x] Selected checkmark style: заменить текстовую `✓` на native stroke-mark; подтверждено sheet-кадрами `03c_market_network_sheet`, `03d_market_sort_sheet`, `03e_market_range_sheet` в `phone_capture/audit_20260528_164118`.
 - [x] Network sheet: market/perps context должен иметь разные тексты.
 - [x] Sort sheet: market/perps context должен иметь разные тексты.
 - [x] Range sheet: 24h/7d/30d должен менять chart/list labels.
@@ -188,27 +193,29 @@
 - [x] Perps: после смены фильтра reset scroll.
 - [x] Discover: проверить scroll bounds.
 - [x] Home: проверить scroll bounds для Crypto/Favorites/NFT.
-- [ ] Проверить fling/быстрый свайп, сейчас обработка `ACTION_MOVE` без инерции.
-- [ ] Проверить tap после небольшого движения: `moved` threshold может съедать легкие taps.
-- [ ] Проверить nested areas: bottom nav не должен перехватываться scroll surface.
+- [x] Проверить fling/быстрый свайп: добавлен `OverScroller`/velocity fling для нативно прокручиваемых поверхностей.
+- [x] Проверить tap после небольшого движения: добавлен touch slop, short swipe по bottom nav обрабатывается как tap.
+- [x] Проверить nested areas: bottom nav не должен перехватываться scroll surface; подтверждено после scrolled Markets center trade tap и после scrolled Discover -> Home nav tap кадром `10_home_after_scrolled_nav_tap` в `phone_capture/audit_20260528_165511`.
 
 ## Live Data / Fallback
 
 - [x] Добавлен fallback список, чтобы строки не пропадали до загрузки API.
-- [ ] Проверить, когда API догружается, нет ли визуального скачка списка.
+- [x] API догрузка больше не пересоздает список: `mergeFetchedMarkets()` обновляет существующий curated набор по id/symbol, поэтому порядок/состав экрана не скачет при ответе CoinGecko.
 - [x] Проверить fallback сортировку и фильтрацию.
 - [x] Проверить CoinGecko key/API handling; сейчас есть hardcoded key.
-- [ ] Проверить offline mode: все вкладки должны выглядеть заполненными.
-- [ ] Проверить repeated `fetchMarketData()` каждые 30 секунд: не дергает ли UI слишком заметно.
+- [x] Offline mode: `seedMarketData()` заполняет `marketList` fallback-монетами уже в конструкторе, поэтому Markets/Perps/Search/Sheets не стартуют пустыми без сети.
+- [x] Repeated `fetchMarketData()` каждые 30 секунд больше не дергает UI полной заменой списка; повторные ответы только merge-обновляют данные существующих rows/cards.
 
 ## Assets
 
-- [ ] Перегенерировать `bottom-nav-perps.png` качественно, не через ручной System.Drawing patch.
+- [x] `bottom-nav-perps.png` больше не используется в APK: bottom nav рисуется native Canvas, а build guard запрещает упаковку `assets/ui/bottom-nav-*.png`.
 - [x] Проверить все `assets/ui/full-*` и `*-page-content.png` на грязные вшитые элементы.
 - [x] Проверить `markets-page-content-rich.png`: содержит статичные строки, которые конфликтуют с live overlay.
 - [x] Проверить `perps-page-content.png`: содержит статичные строки и фильтры, которые пришлось перекрывать.
 - [x] Решить стратегию: либо полностью native Canvas lists/filters, либо чистые screenshot assets без статичных списков.
-- [ ] Добавить настоящие token/provider icons.
+- [x] Добавить настоящие token/provider icons: crypto-token icons закрыты для текущего списка; provider sheet использует реальные Binance, Hyperliquid и dYdX assets.
+- [x] Подключить реальные coin assets из распакованного Trust Wallet `assets/coins` для подтвержденных символов: BTC, ETH, BNB, XRP, TRX, DOGE, SOL, ATOM, ZEC, AAVE, HYPE. Проверено в APK contents и smoke-кадрах `03_markets`, `07b_swap_token_sheet`, `08a_discover_staking_detail` из `phone_capture/audit_20260528_175753`.
+- [x] Подключить официальные Trust Wallet token logos для USDT, USDC, LINK, UNI, ONDO, PEPE, DYDX и добавить их в allowlist APK. Проверено сборкой и содержимым `assets/assets/coins/*` в `trust-wallet-visual-debug.apk`; adb-smoke 2026-05-29 не дошел до кадров, потому что устройство не было подключено (`adb: no devices/emulators found`).
 
 ## Приоритет Исправлений
 
@@ -216,17 +223,18 @@
 - [x] P0: Разделить market/perps sheets по контексту.
 - [x] P0: Сброс `scrollY` при смене фильтров.
 - [x] P0: Убрать конфликты статичных page-content assets и native overlays.
-- [ ] P1: Настоящие token icons в Markets/Perps/Search/Sheets.
+- [x] P1: Настоящие crypto-token icons в Markets/Perps/Search/Sheets для текущего списка: BTC, ETH, USDT, USDC, BNB, XRP, TRX, DOGE, SOL, LINK, UNI, ATOM, ZEC, AAVE, ONDO, PEPE, HYPE.
+- [x] P1: Первый проход real token icons: общий `drawTokenIcon` теперь берет Trust Wallet `assets/coins/*.webp` для BTC/ETH/BNB/XRP/TRX/DOGE/SOL/ATOM/ZEC/AAVE/HYPE; USDT/USDC/UNI/ONDO/PEPE/provider icons еще требуют точного источника, поэтому broad P1 остается открытым.
 - [x] P1: Отдельный Perps detail вместо generic token detail.
 - [x] P1: Send/Receive/Buy/Fund/Deposit перестать открывать generic safe sheet.
 - [x] P1: Search screen closer to Trust Wallet.
-- [ ] P2: Инерционный скролл/fling.
+- [x] P2: Инерционный скролл/fling.
 - [x] P2: Chart range chips с разными данными.
-- [ ] P2: Pixel polish: font sizes, exact colors, radii, spacing.
+- [x] P2: Pixel polish текущего прохода: уплотнены chips, адаптированы sheet heights/title/rows/dividers, token/provider/network bitmaps рисуются через круглую маску; подтверждено свежими smoke-кадрами `phone_capture/audit_20260529_165950`.
 
 ## Технические Замечания
 
-- [ ] `javac` иногда печатает `AccessDeniedException` при закрытии `android.jar`, но APK создается, подписывается и устанавливается. Нужно отдельно разобраться с JDK/SDK file lock.
+- [x] `javac`/SDK file lock: текущие сборки больше не воспроизводят `AccessDeniedException`; остается только обычный Java warning про bootstrap class path / native access, APK создается и подписывается.
 - [x] В проекте нет нормальных автотестов UI; полезно добавить простой adb smoke script.
 - [x] Нужно добавить команду capture suite: Home/Markets/Perps/Swap/Discover до и после скролла.
 - [x] Нужно хранить свежие сравнения в отдельной папке `phone_capture/audit_YYYYMMDD`.
@@ -253,9 +261,10 @@ Reference screenshots saved in `phone_capture/current_target/`:
 - [x] Rename Markets tab semantics to `Популярные` in bottom nav while keeping market list behavior.
 - [x] Home top needs current layout from `05_home_top.jpg`: balance, quick actions, live assets.
 - [x] Home scrolled needs current Perps/Earn/Exclusive sections from `06_home_scrolled.jpg`.
+- [x] Home scrolled: add opaque sticky mask so partially clipped asset rows do not show above Perps/Earn sections.
 - [x] Status bar should visually match current iOS-like reference screenshots.
 - [x] Bottom nav should use current rounded translucent style and iOS home indicator.
-- [x] Remove old `Бесср.` bottom nav entry from main navigation; Perps is now inside trade menu.
+- [x] Remove old постоянный `Бесср.` bottom nav entry from main navigation; на обычных вкладках Perps остается внутри trade menu, а на самой Perps-странице nav временно показывает активный `Бесср.` pill как состояние текущего экрана.
 
 ### Current Target Follow-ups
 
@@ -274,6 +283,9 @@ Reference screenshots saved in `phone_capture/current_target/`:
 - [x] Swap: replace close X with back arrow and add iOS home indicator.
 - [x] Rewards: redraw hero illustration closer to target wallet/rewards art.
 - [x] Popular: replace visible `Markets` title with `Популярные` to match current bottom nav semantics.
+- [x] Popular: localize visible category labels and keep chip text short enough to avoid overlap.
+- [x] History: add real scroll for populated transaction list and reset `scrollY` when returning to Home.
+- [x] Text cleanup: remove remaining DOGE icon mojibake fallback.
 - [x] Markets/Popular: hide partial list rows under fixed filters while scrolling.
 - [x] Smoke: update adb capture route so Perps opens through the center trade sheet.
 - [x] Home: replace top glyph icons with Canvas-drawn settings/search/scan/copy icons.
@@ -284,9 +296,41 @@ Reference screenshots saved in `phone_capture/current_target/`:
 - [x] History: replace old screenshot asset with native empty transaction history screen.
 - [x] Manage: replace old screenshot asset with native layout selector and toggles.
 - [x] Home: align hitboxes with the current native top/actions/asset tab layout.
+- [x] Home: remove full-screen screenshot layers; main page renders natively and scrolls as a real screen.
+- [x] APK assets: stop bundling old `assets/assets/ui` screenshot pages; packaged APK now contains only `btc.webp`, `eth.webp`, `bnb.webp` token icons.
 - [x] Swap: replace `swap-page-content.png` with native Canvas screen.
+- [x] Swap: remove `assets/target/swap.png` initial-state overlay; standalone screen remains natively interactive.
+- [x] Trade menu: remove full-screen `assets/target/trade-sheet.png` overlay; sheet renders and responds natively.
+- [x] Rewards: remove `assets/target/rewards-*.png` overlays; Active/Past render through native UI.
+- [x] Build guard: reject any reintroduced full-screen/page-content/home screenshot asset in the APK.
+- [x] Token fallback polish: improve visible XRP/ONDO/ZEC and stock/perps marks in native lists and token sheet.
 - [x] Perps: replace `perps-page-content.png` with native Canvas header/hero/filters/list.
 - [x] Token icons: add native fallback marks for USDT, USDC, XRP, SOL, DOGE, TRX, LINK, UNI, AAVE, PEPE and HYPE.
 - [x] Home assets: replace Favorites/NFT screenshot assets with native Canvas tabs and empty states.
 - [x] Search: add search icon, cancel action, token/dApp/NFT chips and expanded dApp results.
 - [x] Discover: add quick link cards and reduce scroll bounds so bottom nav stays fixed.
+- [x] Discover: localize visible quick links, CTA, dApp search results and detail metadata.
+- [x] Discover: hide clipped search/header content under the status area while scrolling.
+- [x] Perps: localize visible category chips (`Popular/New/Crypto/Stocks`) and keep spacing clean.
+- [x] Swap: localize visible `Fund` and `Select token` controls without clipping.
+- [x] History: tune bottom `18 мая` group so the top state matches the reference crop while keeping the row reachable by scroll.
+- [x] Home: separate NFT tab and history icon hitboxes so near-icon taps open history reliably without breaking NFT selection.
+- [x] Sheets: localize secondary labels in wallet selector, buy providers and fund options.
+- [x] Smoke: include transaction history top/scrolled captures after Home; stabilized with segmented app restart and verified in `phone_capture/audit_20260530_142841`.
+- [x] Home scrolled: localize Earn card source labels and Exclusive `Meet Tru` title.
+- [x] Sheets: prevent accidental close/selection on token search field and option-row gaps; confirmed in `phone_capture/audit_20260528_160847`.
+- [x] Token fallback polish: replace blank TRX placeholder with a red Tron-style native mark; confirmed on Home and Staking detail in `phone_capture/audit_20260528_161234`.
+- [x] Token fallback polish: replace grey ATOM placeholder with a Cosmos-style native mark; confirmed on Staking detail in `phone_capture/audit_20260528_161651`.
+- [x] Home promo art: replaced hand-drawn Hyperliquid Canvas illustration with a real Trust Wallet Hyperliquid/perps cutout asset; cleaned detached lower fragment and verified in `phone_capture/audit_20260530_154200/01_home.png`.
+- [x] Home balance typography: narrowed/lowered variable weight to reduce Inter heaviness; latest measured balance bbox is `453px` wide in `phone_capture/audit_20260530_160050/01_home.png`.
+- [x] Home asset amount typography: added real Trust APK `Roboto-Medium-Numbers.ttf` for strong financial numbers; verified in `phone_capture/audit_20260530_162441/01_home.png`.
+- [x] Home real assets pass: TRX row and USDT/Tron overlay now use the real Trust `195.webp` Tron bitmap; Hyperliquid promo art was regenerated from the Trust Wallet `learn_perps_2_dark.png` foreground with transparent background and verified in `phone_capture/audit_20260530_165847/01_home.png`.
+- [x] Home final polish pass: balance typography increased to a heavier display weight, Hyperliquid foreground art resized to the reference card slot, and Rewards nav gift icon redrawn with closer proportions; verified in `phone_capture/audit_20260530_170651/01_home.png`.
+- [x] Home quick actions typography: send/receive/swap/buy buttons now use real cropped button/icon assets only for the icon block while labels are drawn natively with the shared semibold text stack; verified in `phone_capture/audit_20260530_182332/01_home.png`.
+- [x] Home wallet chip typography: `25K` and the chevron are now separate native primitives instead of a combined text glyph, avoiding font-dependent arrow spacing; verified in `phone_capture/audit_20260530_183125/01_home.png`.
+- [x] Home network badges: TON badge now uses a dedicated TON-logo-shaped native glyph instead of the previous generic triangle fallback; verified in `phone_capture/audit_20260530_184140/01_home.png`. A real downloadable TON PNG was attempted from official/Wikimedia sources but blocked by CDN TLS/429, so this remains a native logo approximation until a bundled source asset is available.
+- [x] Home font pass: local Apple `SFNS.ttf` from the browser font cache is now packaged under the existing `SF-Pro-*` asset names, so `loadFonts()` uses an Apple San Francisco-family font instead of Inter fallback for Home text/balance. Verified packaged APK contains `assets/assets/fonts/SF-Pro-*` and latest Home capture is `phone_capture/audit_20260530_184832/01_home.png` with balance bbox `432x106`.
+- [x] Home font weight pass: `textTyped()` now uses `Typeface.create(typeface, weight, false)` on Android 28+ so SFNS-backed Regular/Medium/Semibold/Bold weights render as distinct weights even when the packaged font file is static. Verified in `phone_capture/audit_20260530_185633/01_home.png`; balance bbox is `436x109`.
+- [x] Home wallet copy icon: shifted and scaled the real `copy-button.png` crop so the visible glyph center lands at `693.5/407.5`, matching the spec target near `690/405`; verified in `phone_capture/audit_20260530_190633/01_home.png`.
+- [x] Home SF typography pass: balance now uses SF Display Bold 700 with tabular figures, the red delta uses SF Text Medium 500, and Home asset amounts use SF Pro Text tabular figures instead of the Roboto-number fallback. Verified in `phone_capture/audit_20260530_191534/01_home.png`; full smoke also captured `phone_capture/audit_20260530_191534/02_home_scrolled.png`.
+- [x] Home real-font/action pass: removed the fake `SF-Pro-*` runtime dependency because the packaged files were the same single SFNS cache font under different names; Home now uses real Inter weights from the Trust APK extraction, action buttons are native vector primitives instead of dirty bitmap crops, and the Perps section is back at the canonical reference baseline. Verified in `phone_capture/audit_20260530_194648/01_home.png` and `phone_capture/audit_20260530_194648/02_home_scrolled.png`; APK guard confirms no `SF-Pro-*`, `assets/ui`, `assets/target`, `full-*`, `*-page-content*`, or `home-*` entries.
