@@ -1,167 +1,29 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#1b1b1c">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#171718">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Trust">
     <link rel="apple-touch-icon" href="assets/icon.png">
-    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="manifest" href="manifest.webmanifest?v=canvas40">
+    <link rel="stylesheet" href="styles.css?v=canvas40">
     <title>Trust</title>
-    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <main class="wallet-screen" aria-label="Trust Wallet">
-      <div class="status-bar" aria-hidden="true"></div>
-      <section class="perps-page" aria-label="Perps">
-        <button class="perps-history-hit" type="button" aria-label="History"></button>
-        <button class="perps-settings-hit" type="button" aria-label="Settings"></button>
-        <button class="perps-deposit-hit" type="button" aria-label="Deposit"></button>
-        <button class="perps-search-hit" type="button" aria-label="Search markets"></button>
-      </section>
-
-      <section class="app-page markets-page" aria-label="Markets">
-        <button class="markets-search-hit" type="button" aria-label="Search"></button>
-        <button class="markets-predictions-hit" type="button" aria-label="Predictions"></button>
-        <button class="markets-meme-hit" type="button" aria-label="Meme Rush"></button>
-      </section>
-
-      <section class="app-page swap-page full-page" aria-label="Swap">
-        <button class="page-back-hit swap-back-hit" type="button" aria-label="Back"></button>
-        <button class="swap-settings-hit" type="button" aria-label="Swap settings"></button>
-        <button class="swap-fund-hit" type="button" aria-label="Fund"></button>
-        <button class="swap-token-hit" type="button" aria-label="Select token"></button>
-      </section>
-
-      <section class="app-page discover-page" aria-label="Discover">
-        <button class="discover-search-hit" type="button" aria-label="Search dApp"></button>
-        <button class="discover-earn-hit" type="button" aria-label="Earn"></button>
-      </section>
-
-      <section class="app-page history-page full-page" aria-label="Transaction history">
-        <button class="page-back-hit" type="button" aria-label="Back"></button>
-      </section>
-
-      <section class="app-page manage-page full-page" aria-label="Asset manage">
-        <button class="page-back-hit manage-close-hit" type="button" aria-label="Close"></button>
-        <button class="manage-crypto-hit" type="button" aria-label="Manage crypto"></button>
-        <button class="manage-low-balance-hit" type="button" aria-label="Hide low balances"></button>
-        <button class="manage-nft-hit" type="button" aria-label="Hide NFT"></button>
-        <button class="manage-predictions-hit" type="button" aria-label="Hide Predictions"></button>
-        <button class="manage-perps-hit" type="button" aria-label="Hide Perps"></button>
-      </section>
-
-      <section class="dynamic-page full-page" aria-label="Action page">
-        <button class="dynamic-back page-back-hit" type="button" aria-label="Back"></button>
-        <h1 class="dynamic-title"></h1>
-        <div class="dynamic-content"></div>
-      </section>
-
-      <div class="sheet-backdrop" aria-hidden="true"></div>
-      <section class="action-sheet" aria-label="Sheet">
-        <button class="sheet-close" type="button" aria-label="Close"></button>
-        <h2 class="sheet-title"></h2>
-        <div class="sheet-content"></div>
-      </section>
-      <div class="toast" role="status" aria-live="polite"></div>
-
-      <section class="topbar" aria-label="Верхняя панель">
-        <button class="top-icon settings-dot" type="button" aria-label="Настройки"></button>
-        <button class="search-pill" type="button" aria-label="Поиск"><span>Поиск</span></button>
-        <strong class="balance-title">0,00 $</strong>
-        <button class="collapsed-search" type="button" aria-label="Поиск"></button>
-        <button class="top-icon scan-button" type="button" aria-label="Сканировать"></button>
-      </section>
-
-      <div class="main-scroll" aria-label="Главная страница">
-        <div class="scroll-content">
-          <button class="wallet-chip" type="button" aria-label="Основной кошелек 1"><span>Основной кошелек 1</span></button>
-          <button class="copy-button" type="button" aria-label="Копировать адрес"></button>
-
-          <section class="quick-actions" aria-label="Действия">
-            <button class="qa qa-send" type="button" aria-label="Отправить"></button>
-            <button class="qa qa-receive" type="button" aria-label="Получить"></button>
-            <button class="qa qa-swap" type="button" aria-label="Обмен"></button>
-            <button class="qa qa-buy" type="button" aria-label="Покупка"></button>
-          </section>
-
-          <section class="asset-tabs" aria-label="Вкладки активов">
-            <button class="asset-tab crypto-tab active" type="button" data-tab="crypto">Криптовалюта</button>
-            <button class="asset-tab watchlist-tab" type="button" data-tab="favorites">Избранное</button>
-            <button class="asset-tab nft-tab" type="button" data-tab="nft">NFT</button>
-            <button class="icon-tab history-tab" type="button" aria-label="История"></button>
-            <button class="icon-tab layout-tab" type="button" aria-label="Настроить"></button>
-          </section>
-
-          <article class="empty-card">
-            <img src="assets/empty-art.png" alt="">
-            <h1>Пополните кошелек, чтобы начать торговать и зарабатывать</h1>
-            <button class="primary" type="button">Пополнить</button>
-            <button class="secondary" type="button">Получить криптовалюту</button>
-          </article>
-
-          <section class="favorite-empty" aria-label="Избранное">
-            <img src="assets/watchlist-empty.png" alt="">
-            <p>Сохраняйте любимые криптовалюты и следите за изменениями цен.</p>
-            <button type="button"><span>+</span>Добавить токены</button>
-          </section>
-
-          <section class="nft-body" aria-label="NFT"></section>
-
-          <section class="perps-section" aria-label="Perps">
-            <h2>Perps <span class="heading-chevron"></span></h2>
-            <div class="perps-track">
-              <button class="perp-card" type="button">
-                <span class="coin eth-coin"><img src="assets/token_logo.png" alt=""></span>
-                <span class="chain-mark"></span>
-                <strong>ETH</strong>
-                <em>Торгуйте ETH с<br>кредитным пле...</em>
-                <small>Объем $210.6K</small>
-              </button>
-              <button class="perp-card" type="button">
-                <span class="coin sol-coin"><i></i><i></i><i></i></span>
-                <span class="chain-mark"></span>
-                <strong>SOL</strong>
-                <em>Торгуйте SOL с<br>кредитным пле...</em>
-                <small>Объем $828.4K</small>
-              </button>
-              <button class="perp-card" type="button">
-                <span class="coin coin-img"><img src="assets/btc.webp" alt=""></span>
-                <span class="chain-mark"></span>
-                <strong>BTC</strong>
-                <em>Торгуйте BTC с<br>кредитным пле...</em>
-                <small>Объем $11.1K</small>
-              </button>
-            </div>
-          </section>
-
-          <section class="earn-section" aria-label="Заработок">
-            <h2>Заработок <span class="heading-chevron"></span></h2>
-            <div class="unavailable">
-              <span class="alert-icon" aria-hidden="true"></span>
-              <p>Данные недоступны.</p>
-            </div>
-          </section>
-
-          <section class="history-section" aria-label="История">
-            <h2>История <span class="heading-chevron"></span></h2>
-          </section>
+    <canvas id="wallet" aria-label="Trust Wallet visual"></canvas>
+    <div id="editor" class="editor" hidden>
+      <div class="editor-card">
+        <label id="editorLabel" for="editorInput"></label>
+        <input id="editorInput" autocomplete="off" inputmode="text">
+        <div class="editor-actions">
+          <button id="editorCancel" type="button">Отмена</button>
+          <button id="editorApply" type="button">Применить</button>
         </div>
       </div>
-
-      <nav class="bottom-nav" aria-label="Основная навигация">
-        <button class="selected nav-home" type="button" aria-label="Главная"></button>
-        <button class="nav-markets" type="button" aria-label="Рынки"></button>
-        <button class="center nav-swap" type="button" aria-label="Обмен"></button>
-        <button class="nav-perps" type="button" aria-label="Бессрочные фьючерсы"></button>
-        <button class="nav-discover" type="button" aria-label="Подробнее"></button>
-      </nav>
-
-      <div class="system-nav" aria-hidden="true"><i></i><b></b><em></em></div>
-    </main>
-    <script src="parsed-pages.js"></script>
-    <script src="app.js"></script>
+    </div>
+    <script type="module" src="app.js?v=canvas40"></script>
   </body>
 </html>

@@ -72,6 +72,7 @@ $nativeAssetAllowList = @(
     "assets\fonts\BinancePlex-Light.otf",
     "assets\fonts\Roboto-Medium-Numbers.ttf",
     "assets\native-ui\top-settings.png",
+    "assets\native-ui\left.png",
     "assets\native-ui\top-search-pill.png",
     "assets\native-ui\top-scan.png",
     "assets\native-ui\copy-button.png",

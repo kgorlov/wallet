@@ -23,11 +23,18 @@ trust-wallet-ios/
 # Local verification captures
 phone_capture/
 video_frames/
+test-results/
+new_references/
+refs_sent/
 
 # Generated preview screenshots and diffs
 trust-wallet-pwa/preview*.png
 trust-wallet-pwa/target*.png
 trust-wallet-pwa/diff*.png
+trust-wallet-pwa/migration*.png
+android-web-*.png
+left.png
+up.png
 
 # OS / IDE / temp files
 .DS_Store

@@ -1,6 +1,7 @@
 package com.wallet.crypto.trustvisual;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -20,11 +21,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.OverScroller;
 
 import java.io.InputStream;
@@ -80,6 +84,7 @@ public class MainActivity extends Activity {
     static class TrustCanvasView extends View {
         static final int BASE_W = 1080;
         static final int BASE_H = 2400;
+        static final int HOME_CACHE_H = 3920;
         static final int NAV_TOP = 2180;
         static final int NAV_BOTTOM = 2375;
         static final int MARKETS_LIST_TOP = 1185;
@@ -122,6 +127,12 @@ public class MainActivity extends Activity {
         static final int SHEET_SCAN = 19;
         static final int SHEET_TRADE_MENU = 20;
         static final int SHEET_SECRET_MENU = 21;
+        static final int SHEET_RECEIVE_DETAIL = 22;
+        static final int SHEET_SEND_FORM = 23;
+        static final int SHEET_TX_DETAIL = 24;
+        static final int SHEET_SEND_CONFIRM = 25;
+        static final int SHEET_SEND_PROCESSING = 26;
+        static final int SHEET_SEND_NETWORK = 27;
 
         static final int MODAL_NONE = 0;
         static final int MODAL_SEARCH = 1;
@@ -132,6 +143,7 @@ public class MainActivity extends Activity {
         final Activity activity;
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         final Map<String, Bitmap> bitmaps = new HashMap<String, Bitmap>();
+        final Map<String, Typeface> weightedTypefaces = new HashMap<String, Typeface>();
         final Map<String, MarketCoin> marketCoins = new HashMap<String, MarketCoin>();
         final ArrayList<MarketCoin> marketList = new ArrayList<MarketCoin>();
         final Handler handler = new Handler(Looper.getMainLooper());
@@ -192,8 +204,21 @@ public class MainActivity extends Activity {
         MarketCoin selectedSwapToken = null;
         HomeBalanceState homeBalance = HomeBalanceState.reference();
         final ArrayList<DevTx> devHistory = new ArrayList<DevTx>();
+        DevTx selectedTx = null;
+        String sendAssetSymbol = "USDT";
+        String sendNetwork = "BNB Smart Chain";
+        String sendAddress = "0x97b6e11220fbf";
+        double sendAmount = 1d;
         boolean updating = false;
         long lastUpdateMs = 0L;
+        int marketDataVersion = 0;
+        int homeContentVersion = 0;
+        Bitmap homeContentCache = null;
+        String homeContentCacheKey = "";
+        String visibleCoinsCacheKey = "";
+        List<MarketCoin> visibleCoinsCache = Collections.emptyList();
+        String topTradedCacheKey = "";
+        List<MarketCoin> topTradedCache = Collections.emptyList();
         final Runnable updater = new Runnable() {
             @Override
             public void run() {
@@ -309,7 +334,7 @@ public class MainActivity extends Activity {
                     else if (draggingModal) modalScrollY = clamp(modalScrollY + dy, 0, maxModalScroll());
                     else scrollY = clamp(scrollY + dy, 0, maxScroll());
                     lastY = y;
-                    invalidate();
+                    postInvalidateOnAnimation();
                 }
                 return true;
             }
@@ -364,15 +389,33 @@ public class MainActivity extends Activity {
                     manage = false;
                     scrollY = 0f;
                     invalidate();
+                    return true;
+                }
+                if (history) {
+                    float cy = y + scrollY;
+                    if (!devHistory.isEmpty()) {
+                        int index = (int) ((cy - 556) / 203f);
+                        float rowY = 612 + index * 203f;
+                        if (index >= 0 && index < devHistory.size() && hit(x, cy, 44, rowY - 92, 1036, rowY + 92)) {
+                            selectedTx = devHistory.get(index);
+                            openSheet(SHEET_TX_DETAIL);
+                            return true;
+                        }
+                    }
+                    if (hit(x, cy, 44, 500, 1036, 655) || hit(x, cy, 44, 780, 1036, 935) || hit(x, cy, 44, 1185, 1036, 1340) || hit(x, cy, 44, 1388, 1036, 1543) || hit(x, cy, 44, 1702, 1036, 1857)) {
+                        selectedTx = null;
+                        openSheet(SHEET_TX_DETAIL);
+                        return true;
+                    }
                 }
                 return true;
             }
 
-            if (hit(x, y, 44, NAV_TOP, 230, NAV_BOTTOM)) return openPage(0);
-            if (hit(x, y, 230, NAV_TOP, 416, NAV_BOTTOM)) return openPage(1);
-            if (hit(x, y, 416, NAV_TOP - 35, 664, NAV_BOTTOM)) return openSheet(SHEET_TRADE_MENU);
-            if (hit(x, y, 664, NAV_TOP, 850, NAV_BOTTOM)) return openPage(page == 5 ? 5 : 3);
-            if (hit(x, y, 850, NAV_TOP, 1036, NAV_BOTTOM)) return openPage(4);
+            if (hit(x, y, 24, NAV_TOP, 268, NAV_BOTTOM)) return openPage(0);
+            if (hit(x, y, 268, NAV_TOP, 470, NAV_BOTTOM)) return openPage(1);
+            if (hit(x, y, 470, NAV_TOP - 35, 650, NAV_BOTTOM)) return openSheet(SHEET_TRADE_MENU);
+            if (hit(x, y, 650, NAV_TOP, 835, NAV_BOTTOM)) return openPage(page == 5 ? 5 : 3);
+            if (hit(x, y, 835, NAV_TOP, 1056, NAV_BOTTOM)) return openPage(4);
 
             if (page == 0) {
                 float cy = y + scrollY;
@@ -562,6 +605,7 @@ public class MainActivity extends Activity {
             stopFling();
             assetTab = nextTab;
             scrollY = 0f;
+            homeContentVersion++;
             invalidate();
             return true;
         }
@@ -696,6 +740,94 @@ public class MainActivity extends Activity {
                 }
                 return true;
             }
+            if (sheet == SHEET_SEND || sheet == SHEET_RECEIVE || sheet == SHEET_SEND_FORM || sheet == SHEET_RECEIVE_DETAIL || sheet == SHEET_SEND_CONFIRM || sheet == SHEET_SEND_PROCESSING || sheet == SHEET_SEND_NETWORK) {
+                if (hit(x, y, 35, 210, 145, 320) || hit(x, y, 940, 210, 1045, 320)) {
+                    sheet = sheet == SHEET_SEND_NETWORK ? SHEET_SEND_FORM : SHEET_NONE;
+                    invalidate();
+                    return true;
+                }
+                if (sheet == SHEET_SEND_PROCESSING && hit(x, y, 940, 960, 1045, 1120)) {
+                    sheet = SHEET_NONE;
+                    invalidate();
+                    return true;
+                }
+                if (sheet == SHEET_SEND) {
+                    if (hit(x, y, 44, 675, 1036, 850)) {
+                        setSendAsset("USDT");
+                        sheet = SHEET_SEND_FORM;
+                        invalidate();
+                        return true;
+                    }
+                    if (hit(x, y, 44, 850, 1036, 1025)) {
+                        setSendAsset("TRX");
+                        sheet = SHEET_SEND_FORM;
+                        invalidate();
+                        return true;
+                    }
+                    if (hit(x, y, 44, 1025, 1036, 1200)) {
+                        setSendAsset("USDT_TON");
+                        sheet = SHEET_SEND_FORM;
+                        invalidate();
+                        return true;
+                    }
+                }
+                if (sheet == SHEET_RECEIVE && hit(x, y, 44, 695, 1036, 865)) {
+                    sheet = SHEET_RECEIVE_DETAIL;
+                    invalidate();
+                    return true;
+                }
+                if (sheet == SHEET_SEND_FORM && hit(x, y, 44, 2120, 1036, 2265)) {
+                    sheet = SHEET_SEND_CONFIRM;
+                    invalidate();
+                    return true;
+                }
+                if (sheet == SHEET_SEND_FORM && hit(x, y, 44, 455, 1036, 613)) {
+                    showSendAddressDialog();
+                    return true;
+                }
+                if (sheet == SHEET_SEND_FORM && hit(x, y, 44, 765, 560, 857)) {
+                    sheet = SHEET_SEND_NETWORK;
+                    invalidate();
+                    return true;
+                }
+                if (sheet == SHEET_SEND_FORM && hit(x, y, 44, 980, 1036, 1130)) {
+                    showSendAmountDialog();
+                    return true;
+                }
+                if (sheet == SHEET_SEND_NETWORK) {
+                    int option = (int) ((y - 520) / 145f);
+                    if (option >= 0 && option < sendNetworkOptions().length) {
+                        sendNetwork = sendNetworkOptions()[option];
+                        sheet = SHEET_SEND_FORM;
+                        invalidate();
+                    }
+                    return true;
+                }
+                if (sheet == SHEET_SEND_CONFIRM && hit(x, y, 44, 2120, 1036, 2265)) {
+                    simulateReferenceSend();
+                    sheet = SHEET_SEND_PROCESSING;
+                    invalidate();
+                    return true;
+                }
+                if (sheet == SHEET_SEND_PROCESSING && hit(x, y, 88, 2040, 992, 2180)) {
+                    history = true;
+                    page = 0;
+                    scrollY = 0f;
+                    selectedTx = devHistory.isEmpty() ? null : devHistory.get(0);
+                    sheet = SHEET_TX_DETAIL;
+                    invalidate();
+                    return true;
+                }
+                return true;
+            }
+            if (sheet == SHEET_TX_DETAIL) {
+                if (y < 790 || hit(x, y, 940, 835, 1045, 950)) {
+                    sheet = SHEET_NONE;
+                    invalidate();
+                    return true;
+                }
+                return true;
+            }
             if (y < sheetTop() || y > sheetBottom() || hit(x, y, 930, 1280, 1036, 1400)) {
                 sheet = SHEET_NONE;
                 invalidate();
@@ -747,18 +879,18 @@ public class MainActivity extends Activity {
                 return true;
             } else if (sheet == SHEET_SECRET_MENU) {
                 if (hit(x, y, 88, 1460, 992, 1568)) {
-                    homeBalance = HomeBalanceState.reference();
-                    addDevTx(false, "DEV", "Баланс сброшен", "+0", "≈ $0.00");
+                    showDevBalanceDialog();
                 } else if (hit(x, y, 88, 1588, 992, 1696)) {
-                    homeBalance = HomeBalanceState.rich();
-                    addDevTx(false, "DEV", "Баланс увеличен", "+9 138,55 $", "Тест");
+                    showDevTxDialog(true);
                 } else if (hit(x, y, 88, 1716, 992, 1824)) {
-                    homeBalance = HomeBalanceState.low();
-                    addDevTx(true, "DEV", "Баланс уменьшен", "-809,02 $", "Тест");
+                    showDevTxDialog(false);
                 } else if (hit(x, y, 88, 1844, 992, 1952)) {
-                    simulateSend("USDT", 10d);
+                    homeBalance = HomeBalanceState.reference();
+                    homeContentVersion++;
+                    addDevTx(false, "DEV", "Баланс сброшен", "+0", "≈ $0.00");
                 } else if (hit(x, y, 88, 1972, 992, 2080)) {
-                    simulateReceive("TRX", 25d);
+                    devHistory.clear();
+                    homeContentVersion++;
                 } else {
                     return true;
                 }
@@ -914,7 +1046,6 @@ public class MainActivity extends Activity {
                             @Override
                             public void run() {
                                 updating = false;
-                                invalidate();
                             }
                         });
                     }
@@ -982,6 +1113,9 @@ public class MainActivity extends Activity {
             for (MarketCoin coin : fallback) {
                 marketCoins.put(coin.id, coin);
             }
+            marketDataVersion++;
+            clearMarketCaches();
+            homeContentVersion++;
         }
 
         void mergeFetchedMarkets(Map<String, MarketCoin> fetched) {
@@ -1001,6 +1135,16 @@ public class MainActivity extends Activity {
                 if (selectedCoin != null && (current.id.equals(selectedCoin.id) || current.symbol.equals(selectedCoin.symbol))) selectedCoin = live;
                 if (selectedSwapToken != null && (current.id.equals(selectedSwapToken.id) || current.symbol.equals(selectedSwapToken.symbol))) selectedSwapToken = live;
             }
+            marketDataVersion++;
+            clearMarketCaches();
+            homeContentVersion++;
+        }
+
+        void clearMarketCaches() {
+            visibleCoinsCacheKey = "";
+            visibleCoinsCache = Collections.emptyList();
+            topTradedCacheKey = "";
+            topTradedCache = Collections.emptyList();
         }
 
         void drawLiveMarkets(Canvas canvas) {
@@ -1450,19 +1594,23 @@ public class MainActivity extends Activity {
             paint.setColor(color);
             paint.setTextSize(size);
             paint.setTextAlign(align);
-            Typeface effectiveTypeface = typeface;
-            if (Build.VERSION.SDK_INT >= 28 && typeface != null) {
-                effectiveTypeface = Typeface.create(typeface, weight, false);
-            }
-            paint.setTypeface(effectiveTypeface);
+            paint.setTypeface(weightedTypeface(typeface, weight));
             paint.setSubpixelText(true);
             paint.setLinearText(true);
             if (Build.VERSION.SDK_INT >= 21) paint.setFontFeatureSettings(tabular ? "tnum" : null);
-            if (Build.VERSION.SDK_INT >= 26) paint.setFontVariationSettings("'wght' " + weight);
             canvas.drawText(text, x, y, paint);
-            if (Build.VERSION.SDK_INT >= 26) paint.setFontVariationSettings(null);
             if (Build.VERSION.SDK_INT >= 21) paint.setFontFeatureSettings(null);
             paint.setTypeface(fontRegular);
+        }
+
+        Typeface weightedTypeface(Typeface typeface, int weight) {
+            if (Build.VERSION.SDK_INT < 28 || typeface == null) return typeface;
+            String key = System.identityHashCode(typeface) + ":" + weight;
+            Typeface cached = weightedTypefaces.get(key);
+            if (cached != null) return cached;
+            Typeface created = Typeface.create(typeface, weight, false);
+            weightedTypefaces.put(key, created);
+            return created;
         }
 
         String formatPrice(double value) {
@@ -1489,9 +1637,15 @@ public class MainActivity extends Activity {
         }
 
         List<MarketCoin> visibleCoins() {
+            String key = page + ":" + marketFilter + ":" + sortMode + ":" + perpsFilter + ":" + perpsSortMode + ":" + marketDataVersion;
+            if (key.equals(visibleCoinsCacheKey)) return visibleCoinsCache;
             int activeFilter = page == 5 ? perpsFilter : marketFilter;
             int activeSort = page == 5 ? perpsSortMode : sortMode;
-            if (page == 5 && activeFilter == 4) return stockPerpsCoins();
+            if (page == 5 && activeFilter == 4) {
+                visibleCoinsCache = stockPerpsCoins();
+                visibleCoinsCacheKey = key;
+                return visibleCoinsCache;
+            }
             ArrayList<MarketCoin> coins = new ArrayList<MarketCoin>();
             if (marketList.size() == 0) {
                 coins.addAll(marketCoins.values());
@@ -1526,10 +1680,14 @@ public class MainActivity extends Activity {
                 });
             }
             if (coins.size() == 0) coins.addAll(marketList);
+            visibleCoinsCache = coins;
+            visibleCoinsCacheKey = key;
             return coins;
         }
 
         List<MarketCoin> topTradedCoins() {
+            String key = "top:" + marketDataVersion;
+            if (key.equals(topTradedCacheKey)) return topTradedCache;
             ArrayList<MarketCoin> coins = new ArrayList<MarketCoin>();
             if (marketList.size() > 0) coins.addAll(marketList);
             else if (marketCoins.size() > 0) coins.addAll(marketCoins.values());
@@ -1537,6 +1695,8 @@ public class MainActivity extends Activity {
             Collections.sort(coins, new Comparator<MarketCoin>() {
                 @Override public int compare(MarketCoin a, MarketCoin b) { return Double.compare(b.volume, a.volume); }
             });
+            topTradedCache = coins;
+            topTradedCacheKey = key;
             return coins;
         }
 
@@ -1647,29 +1807,27 @@ public class MainActivity extends Activity {
         }
 
         void drawSmallFeatureIcon(Canvas canvas, float cx, float cy, int icon) {
+            rect(canvas, cx - 44, cy - 44, 88, 88, icon == 0 ? Color.rgb(32, 76, 58) : Color.rgb(52, 38, 82), 28);
+            if (icon == 0) {
+                drawCircularBmp(canvas, "assets/coins/59144.webp", cx - 30, cy - 30, 60);
+                drawSparklineBadge(canvas, cx + 24, cy + 24, GREEN);
+                return;
+            }
+            drawCircularBmp(canvas, "assets/coins/pepe.png", cx - 33, cy - 33, 50);
+            drawCircularBmp(canvas, "assets/coins/3.webp", cx - 2, cy - 24, 48);
+            drawSparklineBadge(canvas, cx + 22, cy + 23, Color.rgb(255, 190, 70));
+        }
+
+        void drawSparklineBadge(Canvas canvas, float cx, float cy, int color) {
+            rect(canvas, cx - 22, cy - 22, 44, 44, Color.rgb(26, 27, 30), 22);
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(5);
+            paint.setStrokeWidth(4);
             paint.setStrokeCap(Paint.Cap.ROUND);
             paint.setStrokeJoin(Paint.Join.ROUND);
-            paint.setColor(TEXT);
-            if (icon == 0) {
-                canvas.drawRoundRect(new RectF(cx - 35, cy - 28, cx + 35, cy + 22), 6, 6, paint);
-                canvas.drawLine(cx - 20, cy + 34, cx + 20, cy + 34, paint);
-                canvas.drawLine(cx, cy + 22, cx, cy + 34, paint);
-                canvas.drawLine(cx - 20, cy - 2, cx - 5, cy + 12, paint);
-                canvas.drawLine(cx - 5, cy + 12, cx + 24, cy - 15, paint);
-            } else {
-                Path rocket = new Path();
-                rocket.moveTo(cx - 25, cy + 28);
-                rocket.lineTo(cx + 18, cy - 35);
-                rocket.lineTo(cx + 38, cy - 15);
-                rocket.lineTo(cx - 8, cy + 32);
-                rocket.close();
-                canvas.drawPath(rocket, paint);
-                canvas.drawCircle(cx + 12, cy - 12, 8, paint);
-                canvas.drawLine(cx - 20, cy + 10, cx - 42, cy + 20, paint);
-                canvas.drawLine(cx + 2, cy + 32, cx - 8, cy + 52, paint);
-            }
+            paint.setColor(color);
+            canvas.drawLine(cx - 13, cy + 8, cx - 3, cy - 2, paint);
+            canvas.drawLine(cx - 3, cy - 2, cx + 5, cy + 5, paint);
+            canvas.drawLine(cx + 5, cy + 5, cx + 14, cy - 10, paint);
             paint.setStrokeCap(Paint.Cap.BUTT);
             paint.setStrokeJoin(Paint.Join.MITER);
             paint.setStyle(Paint.Style.FILL);
@@ -1685,41 +1843,41 @@ public class MainActivity extends Activity {
             canvas.drawRoundRect(new RectF(8, 2178, 1072, 2360), 92, 92, paint);
             paint.setStyle(Paint.Style.FILL);
 
-            navItem(canvas, 132, 0, "Главная", activePage == 0);
-            navItem(canvas, 330, 1, "Популярные", activePage == 1);
-            navItem(canvas, 735, activePage == 5 ? 5 : 3, activePage == 5 ? "Бесср." : "Награды", activePage == 3 || activePage == 5);
-            navItem(canvas, 934, 4, "Подробнее", activePage == 4);
+            navItem(canvas, 150, 0, "Главная", activePage == 0);
+            navItem(canvas, 378, 1, "Популярные", activePage == 1);
+            navItem(canvas, 728, activePage == 5 ? 5 : 3, activePage == 5 ? "Бесср." : "Награды", activePage == 3 || activePage == 5);
+            navItem(canvas, 925, 4, "Подробнее", activePage == 4);
 
             rect(canvas, 470, 2128, 140, 140, GREEN, 70);
             drawBmpTint(canvas, "assets/native-ui/nav-trade-icon.png", 506, 2166, 68, 69, Color.rgb(4, 24, 12));
-            text(canvas, "Торговать", 540, 2326, 30, TEXT, Paint.Align.CENTER, true);
+            text(canvas, "Торговать", 540, 2326, 26, TEXT, Paint.Align.CENTER, true);
             rect(canvas, 345, 2370, 390, 12, Color.WHITE, 6);
         }
 
         void navItem(Canvas canvas, float cx, int icon, String label, boolean active) {
             if (active) rect(canvas, cx - 104, 2188, 208, 152, Color.rgb(28, 75, 46), 76);
-            drawNavIconAsset(canvas, cx, 2232, icon, active ? GREEN : MUTED);
-            text(canvas, label, cx, 2312, label.length() > 8 ? 26 : 30, active ? GREEN : MUTED, Paint.Align.CENTER, true);
+            drawNavIconAsset(canvas, cx, 2231, icon, active ? GREEN : MUTED);
+            text(canvas, label, cx, 2316, label.length() > 8 ? 23 : 25, active ? GREEN : MUTED, Paint.Align.CENTER, true);
         }
 
         void drawNavIconAsset(Canvas canvas, float cx, float cy, int icon, int color) {
             if (icon == 0) {
-                drawBmpTint(canvas, "assets/native-ui/nav-main-icon.png", cx - 34, cy - 27, 68, 54, color);
+                drawBmpTint(canvas, "assets/native-ui/nav-main-icon.png", cx - 28, cy - 23, 56, 45, color);
                 return;
             }
             if (icon == 1) {
-                drawBmpTint(canvas, "assets/native-ui/nav-popular-icon.png", cx - 35, cy - 29, 70, 61, color);
+                drawBmpTint(canvas, "assets/native-ui/nav-popular-icon.png", cx - 29, cy - 25, 58, 51, color);
                 return;
             }
             if (icon == 2) {
-                drawBmpTint(canvas, "assets/native-ui/qa-swap-icon.png", cx - 36, cy - 36, 72, 72, color);
+                drawBmpTint(canvas, "assets/native-ui/qa-swap-icon.png", cx - 30, cy - 30, 60, 60, color);
                 return;
             }
             if (icon == 4) {
-                drawBmpTint(canvas, "assets/native-ui/nav-more-icon.png", cx - 32, cy - 28, 64, 56, color);
+                drawBmpTint(canvas, "assets/native-ui/nav-more-icon.png", cx - 27, cy - 24, 54, 48, color);
                 return;
             }
-            drawNavIcon(canvas, cx, cy, icon, color, 1f);
+            drawNavIcon(canvas, cx, cy, icon, color, 0.86f);
         }
 
         void drawNavIcon(Canvas canvas, float cx, float cy, int icon, int color, float scale) {
@@ -2090,6 +2248,14 @@ public class MainActivity extends Activity {
                 drawTradeMenuSheet(canvas);
                 return;
             }
+            if (sheet == SHEET_SEND || sheet == SHEET_RECEIVE || sheet == SHEET_SEND_FORM || sheet == SHEET_RECEIVE_DETAIL || sheet == SHEET_SEND_CONFIRM || sheet == SHEET_SEND_PROCESSING || sheet == SHEET_SEND_NETWORK) {
+                drawTransferReferenceSheet(canvas, sheet);
+                return;
+            }
+            if (sheet == SHEET_TX_DETAIL) {
+                drawTransactionDetailSheet(canvas);
+                return;
+            }
             float top = sheetTop();
             rect(canvas, 0, top, 1080, sheetBottom() - top, Color.rgb(24, 24, 25), 48);
             text(canvas, "×", 980, 1368, 58, MUTED, Paint.Align.CENTER, false);
@@ -2247,19 +2413,689 @@ public class MainActivity extends Activity {
             text(canvas, "Ввести адрес", 540, 2022, 40, GREEN, Paint.Align.CENTER, true);
         }
 
+        void drawTransferReferenceSheet(Canvas canvas, int currentSheet) {
+            float top = 190f;
+            if (currentSheet == SHEET_SEND_PROCESSING) {
+                rect(canvas, 0, 1010, 1080, 1260, Color.rgb(24, 24, 25), 48);
+                drawSendProcessingSheet(canvas);
+                return;
+            }
+            rect(canvas, 0, top, 1080, 2210, Color.rgb(24, 24, 25), 34);
+            if (currentSheet == SHEET_SEND) {
+                drawCloseX(canvas, 102, 272, MUTED, 1f);
+                text(canvas, "Отправить", 540, 286, 48, TEXT, Paint.Align.CENTER, true);
+                drawAssetPickerHeader(canvas, true);
+                drawSendAssetRow(canvas, 710, "USDT", "BNB Smart Chain", homeBalance.usdtTronAmountLabel(), homeBalance.usdtTronFiatLabel());
+                drawSendAssetRow(canvas, 885, "TRX", "Tron", homeBalance.trxAmountLabel(), homeBalance.trxFiatLabel());
+                drawSendAssetRow(canvas, 1060, "USDT_TON", "TON", homeBalance.usdtTonAmountLabel(), homeBalance.usdtTonFiatLabel());
+                return;
+            }
+            if (currentSheet == SHEET_RECEIVE) {
+                drawCloseX(canvas, 102, 272, MUTED, 1f);
+                text(canvas, "Получить", 540, 286, 48, TEXT, Paint.Align.CENTER, true);
+                drawAssetPickerHeader(canvas, false);
+                text(canvas, "Популярное", 44, 690, 36, MUTED, Paint.Align.LEFT, true);
+                receiveAssetRow(canvas, 812, "U", "BNB Smart Chain", "0xa61e0...74B0C99", "assets/coins/714.webp", true);
+                receiveAssetRow(canvas, 970, "BTC", "Bitcoin", "bc1q0ml...e4qapxh", "assets/coins/0.webp", false);
+                receiveAssetRow(canvas, 1128, "ETH", "Ethereum", "0xa61e0...74B0C99", "assets/coins/60.webp", false);
+                receiveAssetRow(canvas, 1286, "SOL", "Solana", "BVqTeke...L4fyWiW", "assets/coins/501.webp", false);
+                receiveAssetRow(canvas, 1444, "TWT", "BNB Smart Chain", "0xa61e0...74B0C99", "", true);
+                receiveAssetRow(canvas, 1602, "BNB", "BNB Smart Chain", "0xa61e0...74B0C99", "assets/coins/714.webp", false);
+                receiveAssetRow(canvas, 1760, "USDT", "Ethereum", "0xa61e0...74B0C99", "assets/coins/usdt.png", false);
+                receiveAssetRow(canvas, 1918, "USDC", "Ethereum", "0xa61e0...74B0C99", "assets/coins/usdc.png", false);
+                text(canvas, "Все криптовалюты", 44, 2068, 36, MUTED, Paint.Align.LEFT, true);
+                return;
+            }
+            if (currentSheet == SHEET_SEND_FORM) {
+                drawBmpRegion(canvas, "assets/native-ui/left.png", 493, 313, 1024, 687, 43, 238, 64, 45);
+                drawCloseX(canvas, 998, 272, MUTED, 0.85f);
+                text(canvas, "Отправить " + sendAssetDisplay(sendAssetSymbol), 540, 286, 48, TEXT, Paint.Align.CENTER, true);
+                drawSendUsdtForm(canvas);
+                return;
+            }
+            if (currentSheet == SHEET_SEND_CONFIRM) {
+                drawSendConfirmSheet(canvas);
+                return;
+            }
+            if (currentSheet == SHEET_SEND_NETWORK) {
+                drawSendNetworkSheet(canvas);
+                return;
+            }
+            drawReceiveQrSheet(canvas);
+        }
+
+        void drawAssetPickerHeader(Canvas canvas, boolean send) {
+            rect(canvas, 44, 355, 992, 110, Color.rgb(42, 42, 46), 55);
+            drawSearchGlyph(canvas, 114, 410, MUTED, 0.58f);
+            text(canvas, "Поиск", 164, 429, 38, Color.rgb(112, 112, 118), Paint.Align.LEFT, true);
+            String[] symbols = new String[]{"Все", "BTC", "ETH", "SOL", "BNB", "TRX", "ARB", ""};
+            String[] assets = new String[]{"", "assets/coins/0.webp", "assets/coins/60.webp", "assets/coins/501.webp", "assets/coins/714.webp", "assets/coins/195.webp", "", ""};
+            int[] fills = new int[]{Color.TRANSPARENT, Color.rgb(247, 147, 26), Color.rgb(93, 126, 236), Color.rgb(24, 18, 40), Color.BLACK, Color.rgb(238, 0, 47), Color.rgb(37, 52, 79), Color.rgb(18, 18, 255)};
+            for (int i = 0; i < symbols.length; i++) {
+                float x = 44 + i * 126;
+                if (i == 0) {
+                    strokeRound(canvas, x, 512, 92, 92, GREEN, 12);
+                    text(canvas, "Все", x + 46, 570, 36, GREEN, Paint.Align.CENTER, true);
+                } else if (assets[i].length() > 0) {
+                    drawRoundedBmp(canvas, assets[i], x, 512, 92, 92, 13);
+                } else {
+                    rect(canvas, x, 512, 92, 92, fills[i], 13);
+                    drawPickerTokenMark(canvas, x + 46, 558, symbols[i]);
+                }
+            }
+        }
+
+        void drawPickerTokenMark(Canvas canvas, float cx, float cy, String symbol) {
+            if ("BTC".equals(symbol)) {
+                text(canvas, "₿", cx, cy + 22, 58, Color.WHITE, Paint.Align.CENTER, true);
+            } else if ("ETH".equals(symbol)) {
+                text(canvas, "◆", cx, cy + 17, 58, Color.WHITE, Paint.Align.CENTER, true);
+            } else if ("SOL".equals(symbol)) {
+                text(canvas, "≋", cx, cy + 17, 62, Color.rgb(119, 241, 207), Paint.Align.CENTER, true);
+            } else if ("BNB".equals(symbol)) {
+                text(canvas, "◇", cx, cy + 20, 62, Color.rgb(247, 191, 36), Paint.Align.CENTER, true);
+            } else if ("TRX".equals(symbol)) {
+                text(canvas, "△", cx, cy + 20, 62, Color.WHITE, Paint.Align.CENTER, true);
+            } else if ("ARB".equals(symbol)) {
+                text(canvas, "◇", cx, cy + 20, 58, Color.rgb(155, 180, 220), Paint.Align.CENTER, true);
+            } else {
+                rect(canvas, cx - 25, cy - 25, 50, 50, Color.WHITE, 2);
+            }
+        }
+
+        void drawSendAssetRow(Canvas canvas, float y, String symbol, String network, String amount, String fiat) {
+            String iconSymbol = "USDT_TON".equals(symbol) ? "USDT" : symbol;
+            drawTokenComposite(canvas, 92, y + 35, iconSymbol, network, "BNB Smart Chain".equals(network));
+            text(canvas, sendAssetDisplay(symbol), 186, y + 22, 46, TEXT, Paint.Align.LEFT, true);
+            tokenNetworkPill(canvas, 350, y - 23, network);
+            text(canvas, sendAssetName(symbol), 186, y + 75, 34, MUTED, Paint.Align.LEFT, false);
+            text(canvas, amount, 980, y + 22, 42, TEXT, Paint.Align.RIGHT, true);
+            text(canvas, fiat, 980, y + 75, 32, MUTED, Paint.Align.RIGHT, false);
+        }
+
+        void receiveAssetRow(Canvas canvas, float y, String symbol, String network, String address, String iconAsset, boolean bnbBadge) {
+            drawTokenComposite(canvas, 92, y - 42, symbol, network, bnbBadge);
+            text(canvas, symbol, 186, y - 52, 43, TEXT, Paint.Align.LEFT, true);
+            tokenNetworkPill(canvas, 276, y - 98, network);
+            text(canvas, address, 186, y, 36, MUTED, Paint.Align.LEFT, false);
+            drawQrMiniIcon(canvas, 836, y - 50);
+            drawCopyMiniIcon(canvas, 982, y - 50);
+        }
+
+        void drawReceiveQrSheet(Canvas canvas) {
+            drawBmpRegion(canvas, "assets/native-ui/left.png", 493, 313, 1024, 687, 30, 238, 64, 45);
+            drawInfoCircle(canvas, 978, 272);
+            text(canvas, "Получить", 540, 286, 48, TEXT, Paint.Align.CENTER, true);
+            rect(canvas, 44, 352, 992, 188, Color.rgb(57, 49, 24), 26);
+            text(canvas, "Отправляйте только активы U (BEP20) на этот", 138, 420, 34, TEXT, Paint.Align.LEFT, false);
+            text(canvas, "адрес. Остальные активы будут безвозвратно", 138, 465, 34, TEXT, Paint.Align.LEFT, false);
+            text(canvas, "утеряны.", 138, 510, 34, TEXT, Paint.Align.LEFT, false);
+            text(canvas, "ⓘ", 94, 448, 33, Color.rgb(239, 190, 38), Paint.Align.CENTER, true);
+            drawTokenComposite(canvas, 350, 635, "U", "BNB Smart Chain", true);
+            text(canvas, "U", 402, 650, 42, TEXT, Paint.Align.LEFT, true);
+            tokenNetworkPill(canvas, 463, 602, "BNB Smart Chain");
+            drawQrCard(canvas, 222, 720, 636);
+            receiveAction(canvas, 264, 1598, 0, "Копировать");
+            receiveAction(canvas, 540, 1598, 1, "Укажите сумму");
+            receiveAction(canvas, 816, 1598, 2, "Поделиться");
+            rect(canvas, 44, 1862, 992, 220, Color.rgb(35, 36, 39), 24);
+            rect(canvas, 92, 1922, 96, 96, Color.rgb(48, 145, 94), 48);
+            drawTransferArrowGlyph(canvas, 140, 1970, 1, GREEN, 0.75f);
+            text(canvas, "Ввод с биржи", 248, 1964, 42, TEXT, Paint.Align.LEFT, true);
+            text(canvas, "Прямой перевод с вашего счета", 248, 2024, 38, MUTED, Paint.Align.LEFT, true);
+        }
+
+        void drawSendUsdtForm(Canvas canvas) {
+            text(canvas, "Адрес или доменное имя", 44, 415, 36, MUTED, Paint.Align.LEFT, true);
+            strokeRound(canvas, 44, 455, 992, 158, Color.rgb(96, 96, 101), 14);
+            text(canvas, ellipsizeMiddle(sendAddress, 21), 88, 555, 42, TEXT, Paint.Align.LEFT, true);
+            rect(canvas, 500, 521, 52, 52, MUTED, 26);
+            text(canvas, "×", 526, 558, 42, Color.rgb(28, 29, 32), Paint.Align.CENTER, true);
+            text(canvas, "Вставить", 590, 555, 36, GREEN, Paint.Align.LEFT, true);
+            drawCopyGlyph(canvas, 850, 535, GREEN, 0.76f);
+            drawScanGlyph(canvas, 960, 535, GREEN, 0.52f);
+            text(canvas, "Сеть назначения", 44, 720, 36, MUTED, Paint.Align.LEFT, true);
+            rect(canvas, 44, 765, 560, 92, Color.rgb(35, 36, 39), 46);
+            drawNetworkIcon(canvas, 84, 811, sendNetwork, 58);
+            text(canvas, sendNetwork, 142, 826, 36, MUTED, Paint.Align.LEFT, true);
+            drawSmallCaret(canvas, 540, 809, MUTED);
+            text(canvas, "Сумма", 44, 935, 36, MUTED, Paint.Align.LEFT, true);
+            strokeRound(canvas, 44, 980, 992, 150, Color.rgb(96, 96, 101), 14);
+            text(canvas, amountLabel(sendAmount, 6), 88, 1072, 42, TEXT, Paint.Align.LEFT, true);
+            rect(canvas, 600, 1038, 52, 52, MUTED, 26);
+            text(canvas, "×", 626, 1075, 42, Color.rgb(28, 29, 32), Paint.Align.CENTER, true);
+            text(canvas, sendAssetDisplay(sendAssetSymbol), 820, 1072, 38, MUTED, Paint.Align.RIGHT, true);
+            text(canvas, "Макс", 992, 1072, 38, GREEN, Paint.Align.RIGHT, true);
+            text(canvas, "≈ $" + moneyLabel(sendAmount * sendAssetPrice()), 44, 1215, 34, TEXT, Paint.Align.LEFT, false);
+            rect(canvas, 44, 2120, 992, 145, GREEN, 72);
+            text(canvas, "Далее", 540, 2208, 42, Color.rgb(20, 25, 22), Paint.Align.CENTER, true);
+        }
+
+        void drawSendConfirmSheet(Canvas canvas) {
+            double feeAmount = estimatedNetworkFeeAmount(sendNetwork, sendAmount);
+            double feeFiat = estimatedNetworkFeeFiat(sendNetwork, sendAmount);
+            double totalFiat = sendAmount * sendAssetPrice() + feeFiat;
+            drawBmpRegion(canvas, "assets/native-ui/left.png", 493, 313, 1024, 687, 30, 238, 64, 45);
+            drawSettingsGlyph(canvas, 1000, 270, GREEN, 0.65f);
+            text(canvas, "Подтвердите отправку", 540, 286, 46, TEXT, Paint.Align.CENTER, true);
+
+            rect(canvas, 44, 430, 992, 188, Color.rgb(35, 36, 39), 28);
+            drawTokenComposite(canvas, 102, 524, "USDT_TON".equals(sendAssetSymbol) ? "USDT" : sendAssetSymbol, sendNetwork, "BNB Smart Chain".equals(sendNetwork));
+            text(canvas, moneyLabel(sendAmount * sendAssetPrice()) + " $", 222, 512, 42, TEXT, Paint.Align.LEFT, true);
+            text(canvas, amountLabel(sendAmount, 6) + " " + sendAssetDisplay(sendAssetSymbol), 222, 565, 36, MUTED, Paint.Align.LEFT, false);
+
+            rect(canvas, 44, 642, 992, 450, Color.rgb(35, 36, 39), 28);
+            confirmRow(canvas, 88, 760, "Из", "Основной кошелек", "0xa61e0...74B0C99");
+            confirmRow(canvas, 88, 900, "На", ellipsizeAddress(sendAddress), null);
+            confirmRow(canvas, 88, 1040, "Сеть", sendNetwork, null);
+
+            rect(canvas, 44, 1120, 992, 235, Color.rgb(35, 36, 39), 28);
+            text(canvas, "Комиссия сети", 88, 1240, 38, MUTED, Paint.Align.LEFT, true);
+            text(canvas, "ⓘ", 414, 1242, 34, MUTED, Paint.Align.CENTER, true);
+            drawNetworkIcon(canvas, 840, 1215, sendNetwork, 42);
+            text(canvas, moneyLabel(feeFiat) + " $", 992, 1226, 38, TEXT, Paint.Align.RIGHT, true);
+            text(canvas, amountLabel(feeAmount, 8) + " " + networkFeeSymbol(), 992, 1282, 34, MUTED, Paint.Align.RIGHT, false);
+
+            rect(canvas, 0, 1890, 1080, 2, Color.rgb(45, 46, 50), 0);
+            rect(canvas, 44, 1940, 992, 134, Color.rgb(35, 36, 39), 30);
+            text(canvas, "Общая стоимость", 88, 2020, 36, MUTED, Paint.Align.LEFT, true);
+            text(canvas, moneyLabel(totalFiat) + " $", 992, 2020, 40, TEXT, Paint.Align.RIGHT, true);
+            rect(canvas, 44, 2120, 992, 145, GREEN, 72);
+            text(canvas, "Подтвердить", 540, 2208, 42, Color.rgb(20, 25, 22), Paint.Align.CENTER, true);
+        }
+
+        void confirmRow(Canvas canvas, float x, float y, String label, String value, String subtitle) {
+            text(canvas, label, x, y, 36, MUTED, Paint.Align.LEFT, true);
+            text(canvas, value, 992, y, 38, TEXT, Paint.Align.RIGHT, true);
+            if (subtitle != null) text(canvas, subtitle, 992, y + 52, 34, MUTED, Paint.Align.RIGHT, false);
+        }
+
+        void drawSendNetworkSheet(Canvas canvas) {
+            drawBmpRegion(canvas, "assets/native-ui/left.png", 493, 313, 1024, 687, 43, 238, 64, 45);
+            text(canvas, "Сеть назначения", 540, 286, 48, TEXT, Paint.Align.CENTER, true);
+            text(canvas, "Выберите сеть для " + sendAssetDisplay(sendAssetSymbol), 44, 420, 36, MUTED, Paint.Align.LEFT, true);
+            String[] networks = sendNetworkOptions();
+            for (int i = 0; i < networks.length; i++) {
+                float y = 560 + i * 145;
+                rect(canvas, 44, y - 72, 992, 118, Color.rgb(31, 32, 35), 26);
+                drawNetworkIcon(canvas, 102, y - 13, networks[i], 66);
+                text(canvas, networks[i], 186, y, 42, TEXT, Paint.Align.LEFT, true);
+                text(canvas, networkFeeSubtitle(networks[i]), 186, y + 45, 30, MUTED, Paint.Align.LEFT, false);
+                if (networks[i].equals(sendNetwork)) text(canvas, "✓", 980, y + 12, 44, GREEN, Paint.Align.RIGHT, true);
+            }
+        }
+
+        void drawSendProcessingSheet(Canvas canvas) {
+            drawCloseX(canvas, 998, 1040, MUTED, 0.9f);
+            canvas.save();
+            canvas.translate(0, 270);
+            drawProcessingMark(canvas, 540, 930);
+            text(canvas, "В обработке", 540, 1210, 54, TEXT, Paint.Align.CENTER, true);
+            text(canvas, "Транзакция выполняется! В настоящее", 540, 1314, 38, MUTED, Paint.Align.CENTER, true);
+            text(canvas, "время проводится валидация в", 540, 1366, 38, MUTED, Paint.Align.CENTER, true);
+            text(canvas, "блокчейне. Это может занять несколько", 540, 1418, 38, MUTED, Paint.Align.CENTER, true);
+            text(canvas, "минут.", 540, 1470, 38, MUTED, Paint.Align.CENTER, true);
+            rect(canvas, 88, 1740, 904, 132, GREEN, 66);
+            text(canvas, "Детали транзакции", 540, 1822, 42, Color.rgb(20, 25, 22), Paint.Align.CENTER, true);
+            canvas.restore();
+        }
+
+        void drawProcessingMark(Canvas canvas, float cx, float cy) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(2.5f);
+            paint.setColor(Color.rgb(34, 119, 205));
+            for (int i = 0; i < 5; i++) {
+                canvas.drawArc(new RectF(cx - 85 + i * 9, cy - 55 - i * 8, cx + 85 - i * 7, cy + 75 + i * 8), 205, 275, false, paint);
+            }
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(GREEN);
+            Path p = new Path();
+            p.moveTo(cx - 86, cy + 2);
+            p.lineTo(cx - 25, cy + 62);
+            p.lineTo(cx + 92, cy - 104);
+            p.lineTo(cx + 118, cy - 82);
+            p.lineTo(cx - 24, cy + 112);
+            p.lineTo(cx - 112, cy + 28);
+            p.close();
+            canvas.drawPath(p, paint);
+            rect(canvas, cx - 30, cy - 142, 28, 14, Color.rgb(35, 83, 255), 3);
+            rect(canvas, cx + 62, cy - 92, 18, 18, Color.rgb(35, 83, 255), 3);
+            rect(canvas, cx - 82, cy - 44, 20, 24, Color.rgb(35, 126, 255), 4);
+        }
+
+        void tokenNetworkPill(Canvas canvas, float x, float y, String network) {
+            float w = Math.max(128, network.length() * 15f + 36);
+            rect(canvas, x, y, w, 52, Color.rgb(50, 50, 54), 26);
+            text(canvas, network, x + w * 0.5f, y + 35, 27, TEXT, Paint.Align.CENTER, false);
+        }
+
+        void drawTokenComposite(Canvas canvas, float cx, float cy, String symbol, String network, boolean bnbBadge) {
+            if ("U".equals(symbol)) {
+                rect(canvas, cx - 52, cy - 52, 104, 104, Color.rgb(35, 35, 39), 52);
+                text(canvas, "U", cx, cy + 23, 64, Color.rgb(211, 178, 83), Paint.Align.CENTER, true);
+                if (bnbBadge) drawCircularBmp(canvas, "assets/coins/714.webp", cx + 23, cy + 20, 42);
+                return;
+            }
+            if ("TWT".equals(symbol)) {
+                rect(canvas, cx - 52, cy - 52, 104, 104, Color.WHITE, 52);
+                drawShieldGlyph(canvas, cx, cy, Color.rgb(18, 71, 180), 0.9f);
+                if (bnbBadge) drawCircularBmp(canvas, "assets/coins/714.webp", cx + 23, cy + 20, 42);
+                return;
+            }
+            MarketCoin coin = coinBySymbol("USDT".equals(symbol) || "U".equals(symbol) ? "USDT" : symbol);
+            if (coin != null) drawTokenIcon(canvas, coin, cx - 52, cy - 52, 104);
+            else {
+                rect(canvas, cx - 52, cy - 52, 104, 104, Color.rgb(45, 45, 48), 52);
+                text(canvas, symbol.substring(0, Math.min(1, symbol.length())), cx, cy + 22, 56, TEXT, Paint.Align.CENTER, true);
+            }
+            if (bnbBadge) drawCircularBmp(canvas, "assets/coins/714.webp", cx + 23, cy + 20, 42);
+        }
+
+        void drawQrMiniIcon(Canvas canvas, float cx, float cy) {
+            rect(canvas, cx - 61, cy - 61, 122, 122, Color.rgb(45, 46, 49), 61);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(5);
+            paint.setColor(MUTED);
+            for (int yy = -1; yy <= 1; yy++) {
+                for (int xx = -1; xx <= 1; xx++) {
+                    if ((xx + yy) % 2 == 0) canvas.drawRect(cx + xx * 22 - 6, cy + yy * 22 - 6, cx + xx * 22 + 6, cy + yy * 22 + 6, paint);
+                }
+            }
+            paint.setStyle(Paint.Style.FILL);
+        }
+
+        void drawCopyMiniIcon(Canvas canvas, float cx, float cy) {
+            rect(canvas, cx - 61, cy - 61, 122, 122, Color.rgb(45, 46, 49), 61);
+            drawCopyGlyph(canvas, cx, cy, MUTED, 0.76f);
+        }
+
+        void drawCloseX(Canvas canvas, float cx, float cy, int color, float scale) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(6 * scale);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setColor(color);
+            canvas.drawLine(cx - 22 * scale, cy - 22 * scale, cx + 22 * scale, cy + 22 * scale, paint);
+            canvas.drawLine(cx + 22 * scale, cy - 22 * scale, cx - 22 * scale, cy + 22 * scale, paint);
+            paint.setStrokeCap(Paint.Cap.BUTT);
+            paint.setStyle(Paint.Style.FILL);
+        }
+
+        void drawInfoCircle(Canvas canvas, float cx, float cy) {
+            rect(canvas, cx - 29, cy - 29, 58, 58, MUTED, 29);
+            text(canvas, "i", cx, cy + 17, 38, Color.rgb(24, 24, 25), Paint.Align.CENTER, true);
+        }
+
+        void drawQrCard(Canvas canvas, float x, float y, float size) {
+            float cardHeight = size * 1.18f;
+            rect(canvas, x, y, size, cardHeight, Color.WHITE, 20);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.BLACK);
+            float qrSize = size * 0.72f;
+            float qrX = x + (size - qrSize) * 0.5f;
+            float qrY = y + size * 0.075f;
+            int modules = 29;
+            float cell = qrSize / modules;
+            for (int row = 0; row < modules; row++) {
+                for (int col = 0; col < modules; col++) {
+                    if (isFinderQuiet(col, row, modules)) continue;
+                    boolean on = isFinderModule(col, row, modules) ||
+                            ((row * 17 + col * 31 + row * col * 3) % 7 < 3) ||
+                            ((row ^ (col * 5)) % 11 == 0);
+                    if (!on) continue;
+                    float px = qrX + col * cell;
+                    float py = qrY + row * cell;
+                    rect(canvas, px + cell * 0.08f, py + cell * 0.08f, cell * 0.84f, cell * 0.84f, Color.BLACK, cell * 0.18f);
+                }
+            }
+            rect(canvas, x + size * 0.43f, y + size * 0.40f, size * 0.14f, size * 0.14f, Color.WHITE, size * 0.03f);
+            drawShieldGlyph(canvas, x + size * 0.5f, y + size * 0.47f, Color.rgb(20, 20, 22), 0.72f);
+            text(canvas, "0xa61e05Ea7Aa2fD107cecb29", x + size * 0.5f, y + cardHeight - 104, 32, Color.rgb(20, 20, 22), Paint.Align.CENTER, true);
+            text(canvas, "1F6FF0f75F74B0C99", x + size * 0.5f, y + cardHeight - 65, 32, Color.rgb(20, 20, 22), Paint.Align.CENTER, true);
+        }
+
+        boolean isFinderQuiet(int col, int row, int modules) {
+            boolean topLeft = col <= 8 && row <= 8;
+            boolean topRight = col >= modules - 9 && row <= 8;
+            boolean bottomLeft = col <= 8 && row >= modules - 9;
+            if (!topLeft && !topRight && !bottomLeft) return false;
+            return !isFinderModule(col, row, modules);
+        }
+
+        boolean isFinderModule(int col, int row, int modules) {
+            int fx = col;
+            int fy = row;
+            if (col >= modules - 7 && row <= 6) fx = col - (modules - 7);
+            else if (col <= 6 && row >= modules - 7) fy = row - (modules - 7);
+            else if (!(col <= 6 && row <= 6)) return false;
+            boolean outer = fx == 0 || fx == 6 || fy == 0 || fy == 6;
+            boolean inner = fx >= 2 && fx <= 4 && fy >= 2 && fy <= 4;
+            return outer || inner;
+        }
+
+        void drawShieldGlyph(Canvas canvas, float cx, float cy, int color, float scale) {
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(color);
+            Path p = new Path();
+            p.moveTo(cx, cy - 38 * scale);
+            p.lineTo(cx + 31 * scale, cy - 22 * scale);
+            p.lineTo(cx + 25 * scale, cy + 25 * scale);
+            p.lineTo(cx, cy + 46 * scale);
+            p.lineTo(cx - 25 * scale, cy + 25 * scale);
+            p.lineTo(cx - 31 * scale, cy - 22 * scale);
+            p.close();
+            canvas.drawPath(p, paint);
+        }
+
+        void receiveAction(Canvas canvas, float cx, float cy, int icon, String label) {
+            rect(canvas, cx - 70, cy - 70, 140, 140, Color.rgb(43, 44, 47), 70);
+            if (icon == 0) drawCopyGlyph(canvas, cx, cy, MUTED, 0.85f);
+            else if (icon == 1) drawTransferArrowGlyph(canvas, cx, cy, 1, MUTED, 0.75f);
+            else drawShareGlyph(canvas, cx, cy, MUTED, 0.8f);
+            text(canvas, label, cx, cy + 130, 36, TEXT, Paint.Align.CENTER, true);
+        }
+
+        void drawShareGlyph(Canvas canvas, float cx, float cy, int color, float scale) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(5.5f * scale);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setStrokeJoin(Paint.Join.ROUND);
+            paint.setColor(color);
+            canvas.drawRoundRect(new RectF(cx - 22 * scale, cy - 5 * scale, cx + 22 * scale, cy + 34 * scale), 5 * scale, 5 * scale, paint);
+            canvas.drawLine(cx, cy + 14 * scale, cx, cy - 34 * scale, paint);
+            canvas.drawLine(cx - 16 * scale, cy - 18 * scale, cx, cy - 34 * scale, paint);
+            canvas.drawLine(cx + 16 * scale, cy - 18 * scale, cx, cy - 34 * scale, paint);
+            paint.setStrokeCap(Paint.Cap.BUTT);
+            paint.setStrokeJoin(Paint.Join.MITER);
+            paint.setStyle(Paint.Style.FILL);
+        }
+
+        void drawTransactionDetailSheet(Canvas canvas) {
+            dim(canvas);
+            boolean sent = selectedTx != null && selectedTx.sent;
+            String title = sent ? "Отправлено" : "Получено";
+            String fiat = sent && selectedTx != null ? selectedTx.fiat : "≈ $2.04";
+            String amount = sent && selectedTx != null ? selectedTx.amount : "+2.04 USDT";
+            String partyLabel = sent ? "Получатель" : "Отправитель";
+            String party = sent && selectedTx != null ? ellipsizeAddress(txRawAddress(selectedTx)) : "0xA711...9fF6A";
+            String feeText = sent && selectedTx != null && selectedTx.feeAmount != null ? selectedTx.feeAmount : "0.00005676 BNB";
+            String feeFiat = sent && selectedTx != null && selectedTx.feeFiat != null ? selectedTx.feeFiat : "≈ $0.0403";
+            canvas.save();
+            canvas.translate(0, -35);
+            rect(canvas, 0, 780, 1080, 1620, Color.rgb(39, 40, 43), 48);
+            rect(canvas, 488, 805, 104, 8, Color.rgb(181, 181, 186), 4);
+            drawShareGlyph(canvas, 88, 880, MUTED, 0.86f);
+            drawCloseX(canvas, 990, 880, MUTED, 0.9f);
+            text(canvas, title, 540, 900, 46, TEXT, Paint.Align.CENTER, true);
+            text(canvas, fiat, 540, 1060, 58, TEXT, Paint.Align.CENTER, true);
+            text(canvas, amount, 540, 1130, 36, MUTED, Paint.Align.CENTER, false);
+
+            rect(canvas, 44, 1280, 992, 350, Color.rgb(49, 50, 54), 26);
+            txDetailLabel(canvas, 88, 1362, "Дата");
+            text(canvas, sent ? "30 мая 2026 г. 23:20" : "30 мая 2026 г. 21:51", 992, 1362, 36, TEXT, Paint.Align.RIGHT, false);
+            txDetailLabel(canvas, 88, 1465, "Статус  ⓘ");
+            text(canvas, "Завершено", 992, 1465, 36, GREEN, Paint.Align.RIGHT, false);
+            txDetailLabel(canvas, 88, 1568, partyLabel);
+            text(canvas, party, 992, 1568, 36, TEXT, Paint.Align.RIGHT, false);
+
+            rect(canvas, 44, 1688, 992, sent ? 195 : 312, Color.rgb(49, 50, 54), 26);
+            txDetailLabel(canvas, 88, 1782, "Комиссия сети  ⓘ");
+            text(canvas, sent ? feeText : "0.00005676 BNB", 992, 1775, 36, TEXT, Paint.Align.RIGHT, false);
+            text(canvas, sent ? feeFiat : "≈ $0.0403", 992, 1828, 34, MUTED, Paint.Align.RIGHT, false);
+            if (!sent) {
+                txDetailLabel(canvas, 88, 1958, "Nonce");
+                text(canvas, "2346796", 992, 1958, 36, TEXT, Paint.Align.RIGHT, false);
+            }
+
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(2);
+            paint.setPathEffect(new DashPathEffect(new float[]{8, 8}, 0));
+            paint.setColor(Color.rgb(61, 62, 66));
+            float explorerTop = sent ? 1946 : 2082;
+            canvas.drawRoundRect(new RectF(44, explorerTop, 1036, explorerTop + 158), 18, 18, paint);
+            paint.setPathEffect(null);
+            paint.setStyle(Paint.Style.FILL);
+            text(canvas, "Посмотреть в обозревателе блоков", 540, explorerTop + 96, 36, GREEN, Paint.Align.CENTER, true);
+            canvas.restore();
+        }
+
+        void txDetailLabel(Canvas canvas, float x, float y, String label) {
+            text(canvas, label, x, y, 34, MUTED, Paint.Align.LEFT, false);
+        }
+
         void drawSecretMenuSheet(Canvas canvas) {
-            text(canvas, "Тестовые действия меняют баланс главной и историю.", 88, 1452, 31, MUTED, Paint.Align.LEFT, false);
-            secretButton(canvas, 1460, "Эталонный баланс", homeBalance.totalFiatLabel());
-            secretButton(canvas, 1588, "Большой тестовый баланс", "≈ 10 000 $");
-            secretButton(canvas, 1716, "Малый тестовый баланс", "≈ 52 $");
-            secretButton(canvas, 1844, "Тест отправки", "-10 USDT");
-            secretButton(canvas, 1972, "Тест получения", "+25 TRX");
+            text(canvas, "Вводи баланс и тестовые операции вручную.", 88, 1452, 31, MUTED, Paint.Align.LEFT, false);
+            secretButton(canvas, 1460, "Изменить баланс", homeBalance.totalFiatLabel());
+            secretButton(canvas, 1588, "Тестовая отправка", "сумма + монета");
+            secretButton(canvas, 1716, "Тестовое получение", "сумма + монета");
+            secretButton(canvas, 1844, "Сбросить эталон", "861,40 $");
+            secretButton(canvas, 1972, "Очистить историю", devHistory.size() + " записей");
         }
 
         void secretButton(Canvas canvas, float y, String title, String value) {
             rect(canvas, 88, y, 904, 108, Color.rgb(35, 36, 39), 30);
             text(canvas, title, 132, y + 66, 36, TEXT, Paint.Align.LEFT, true);
             text(canvas, value, 948, y + 66, 32, MUTED, Paint.Align.RIGHT, false);
+        }
+
+        void showDevBalanceDialog() {
+            final EditText usdtTron = devNumberInput("USDT Tron", homeBalance.usdtTronAmountLabel());
+            final EditText trx = devNumberInput("TRX Tron", homeBalance.trxAmountLabel());
+            final EditText usdtTon = devNumberInput("USDT TON", homeBalance.usdtTonAmountLabel());
+            LinearLayout layout = devDialogLayout();
+            layout.addView(usdtTron);
+            layout.addView(trx);
+            layout.addView(usdtTon);
+            new AlertDialog.Builder(activity)
+                    .setTitle("Тестовый баланс")
+                    .setView(layout)
+                    .setNegativeButton("Отмена", null)
+                    .setPositiveButton("Применить", (dialog, which) -> {
+                        homeBalance.usdtTron = parseDevNumber(usdtTron.getText().toString(), homeBalance.usdtTron);
+                        homeBalance.trx = parseDevNumber(trx.getText().toString(), homeBalance.trx);
+                        homeBalance.usdtTon = parseDevNumber(usdtTon.getText().toString(), homeBalance.usdtTon);
+                        homeContentVersion++;
+                        addDevTx(false, "DEV", "Баланс задан вручную", homeBalance.totalFiatLabel(), "Тест");
+                        invalidate();
+                    })
+                    .show();
+        }
+
+        void showDevTxDialog(final boolean sent) {
+            final EditText symbol = devTextInput("Монета: USDT, TRX или USDT TON", sent ? "USDT" : "TRX");
+            final EditText amount = devNumberInput("Сумма", sent ? "10" : "25");
+            LinearLayout layout = devDialogLayout();
+            layout.addView(symbol);
+            layout.addView(amount);
+            new AlertDialog.Builder(activity)
+                    .setTitle(sent ? "Тестовая отправка" : "Тестовое получение")
+                    .setView(layout)
+                    .setNegativeButton("Отмена", null)
+                    .setPositiveButton(sent ? "Отправить" : "Получить", (dialog, which) -> {
+                        String asset = normalizeDevSymbol(symbol.getText().toString());
+                        double value = parseDevNumber(amount.getText().toString(), 0d);
+                        if (value <= 0d) return;
+                        if (sent) simulateSend(asset, value);
+                        else simulateReceive(asset, value);
+                        invalidate();
+                    })
+                    .show();
+        }
+
+        void showSendAddressDialog() {
+            final EditText address = devTextInput("Адрес получателя", sendAddress);
+            new AlertDialog.Builder(activity)
+                    .setTitle("Адрес получателя")
+                    .setView(address)
+                    .setNegativeButton("Отмена", null)
+                    .setPositiveButton("Применить", (dialog, which) -> {
+                        String value = address.getText().toString().trim();
+                        if (value.length() > 0) sendAddress = value;
+                        invalidate();
+                    })
+                    .show();
+        }
+
+        void showSendAmountDialog() {
+            final EditText amount = devNumberInput("Сумма " + sendAssetDisplay(sendAssetSymbol), amountLabel(sendAmount, 6));
+            new AlertDialog.Builder(activity)
+                    .setTitle("Сумма")
+                    .setView(amount)
+                    .setNegativeButton("Отмена", null)
+                    .setPositiveButton("Применить", (dialog, which) -> {
+                        double value = parseDevNumber(amount.getText().toString(), sendAmount);
+                        if (value > 0d) sendAmount = Math.min(value, sendAssetBalance());
+                        invalidate();
+                    })
+                    .show();
+        }
+
+        LinearLayout devDialogLayout() {
+            LinearLayout layout = new LinearLayout(activity);
+            layout.setOrientation(LinearLayout.VERTICAL);
+            int pad = Math.round(24 * activity.getResources().getDisplayMetrics().density);
+            layout.setPadding(pad, pad / 2, pad, 0);
+            return layout;
+        }
+
+        EditText devNumberInput(String hint, String value) {
+            EditText input = new EditText(activity);
+            input.setHint(hint);
+            input.setText(value);
+            input.setSingleLine(true);
+            input.setSelectAllOnFocus(true);
+            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            return input;
+        }
+
+        EditText devTextInput(String hint, String value) {
+            EditText input = new EditText(activity);
+            input.setHint(hint);
+            input.setText(value);
+            input.setSingleLine(true);
+            input.setSelectAllOnFocus(true);
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+            return input;
+        }
+
+        double parseDevNumber(String raw, double fallback) {
+            if (raw == null) return fallback;
+            String normalized = raw.trim()
+                    .replace(" ", "")
+                    .replace("$", "")
+                    .replace(",", ".");
+            if (normalized.length() == 0) return fallback;
+            try {
+                return Math.max(0d, Double.parseDouble(normalized));
+            } catch (NumberFormatException ignored) {
+                return fallback;
+            }
+        }
+
+        String normalizeDevSymbol(String raw) {
+            String value = raw == null ? "" : raw.trim().toUpperCase(Locale.US);
+            if (value.contains("TON")) return "USDT_TON";
+            if (value.contains("TRX")) return "TRX";
+            return "USDT";
+        }
+
+        void setSendAsset(String symbol) {
+            sendAssetSymbol = symbol;
+            String[] networks = sendNetworkOptions();
+            boolean currentAllowed = false;
+            for (String network : networks) {
+                if (network.equals(sendNetwork)) currentAllowed = true;
+            }
+            if (!currentAllowed) sendNetwork = networks[0];
+            sendAmount = Math.min(Math.max(0.0001d, sendAmount), Math.max(0.0001d, sendAssetBalance()));
+        }
+
+        String sendAssetDisplay(String symbol) {
+            if ("USDT_TON".equals(symbol)) return "USDT";
+            return symbol;
+        }
+
+        String sendAssetName(String symbol) {
+            if ("TRX".equals(symbol)) return "TRON";
+            return "Tether USD";
+        }
+
+        double sendAssetPrice() {
+            if ("TRX".equals(sendAssetSymbol)) return homeBalance.trxPrice;
+            if ("USDT_TON".equals(sendAssetSymbol)) return homeBalance.tonUsdtPrice;
+            return homeBalance.usdtPrice;
+        }
+
+        double sendAssetBalance() {
+            if ("TRX".equals(sendAssetSymbol)) return homeBalance.trx;
+            if ("USDT_TON".equals(sendAssetSymbol)) return homeBalance.usdtTon;
+            return homeBalance.usdtTron;
+        }
+
+        String[] sendNetworkOptions() {
+            if ("TRX".equals(sendAssetSymbol)) return new String[]{"Tron"};
+            if ("USDT_TON".equals(sendAssetSymbol)) return new String[]{"TON"};
+            return new String[]{"BNB Smart Chain", "Ethereum", "Tron", "TON"};
+        }
+
+        String networkFeeSymbol() {
+            if ("Ethereum".equals(sendNetwork)) return "ETH";
+            if ("Tron".equals(sendNetwork)) return "TRX";
+            if ("TON".equals(sendNetwork)) return "TON";
+            return "BNB";
+        }
+
+        String networkFeeSubtitle(String network) {
+            return "Комиссия: " + amountLabel(estimatedNetworkFeeAmount(network, sendAmount), 8) + " " + networkFeeSymbol(network);
+        }
+
+        String networkFeeSymbol(String network) {
+            if ("Ethereum".equals(network)) return "ETH";
+            if ("Tron".equals(network)) return "TRX";
+            if ("TON".equals(network)) return "TON";
+            return "BNB";
+        }
+
+        double estimatedNetworkFeeAmount(String network, double amount) {
+            double safeAmount = Math.max(0.000001d, amount);
+            if ("Ethereum".equals(network)) return 0.0012d + safeAmount * 0.00001d;
+            if ("Tron".equals(network)) return 1.1d + safeAmount * 0.001d;
+            if ("TON".equals(network)) return 0.045d + safeAmount * 0.0004d;
+            return 0.00021d + safeAmount * 0.000002d;
+        }
+
+        double estimatedNetworkFeeFiat(String network, double amount) {
+            double fee = estimatedNetworkFeeAmount(network, amount);
+            if ("Ethereum".equals(network)) return fee * 2031d;
+            if ("Tron".equals(network)) return fee * homeBalance.trxPrice;
+            if ("TON".equals(network)) return fee * 2.95d;
+            return fee * 739d;
+        }
+
+        void drawNetworkIcon(Canvas canvas, float cx, float cy, String network, float size) {
+            if ("BNB Smart Chain".equals(network)) {
+                drawCircularBmp(canvas, "assets/coins/714.webp", cx - size / 2f, cy - size / 2f, size);
+            } else if ("Ethereum".equals(network)) {
+                drawCircularBmp(canvas, "assets/coins/60.webp", cx - size / 2f, cy - size / 2f, size);
+            } else if ("Tron".equals(network)) {
+                drawCircularBmp(canvas, "assets/coins/195.webp", cx - size / 2f, cy - size / 2f, size);
+            } else if ("TON".equals(network)) {
+                rect(canvas, cx - size / 2f, cy - size / 2f, size, size, Color.rgb(0, 136, 204), size / 2f);
+                text(canvas, "◊", cx, cy + size * 0.22f, size * 0.64f, Color.WHITE, Paint.Align.CENTER, true);
+            } else {
+                rect(canvas, cx - size / 2f, cy - size / 2f, size, size, Color.rgb(45, 46, 49), size / 2f);
+            }
+        }
+
+        String ellipsizeAddress(String value) {
+            return ellipsizeMiddle(value, 13);
+        }
+
+        String ellipsizeMiddle(String value, int max) {
+            if (value == null) return "";
+            if (value.length() <= max) return value;
+            int keepLeft = Math.max(4, (max - 3) / 2);
+            int keepRight = Math.max(4, max - 3 - keepLeft);
+            return value.substring(0, keepLeft) + "..." + value.substring(value.length() - keepRight);
         }
 
         void simulateSend(String symbol, double amount) {
@@ -2269,17 +3105,47 @@ public class MainActivity extends Activity {
             } else if ("TRX".equals(symbol)) {
                 homeBalance.trx = Math.max(0d, homeBalance.trx - amount);
                 addDevTx(true, "Отправлено", "В: TEST...SEND", "-" + amountLabel(amount, 4) + " TRX", "≈ $" + moneyLabel(amount * homeBalance.trxPrice));
+            } else if ("USDT_TON".equals(symbol)) {
+                homeBalance.usdtTon = Math.max(0d, homeBalance.usdtTon - amount);
+                addDevTx(true, "Отправлено", "В: TEST...SEND", "-" + amountLabel(amount, 2) + " USDT TON", "≈ $" + moneyLabel(amount * homeBalance.tonUsdtPrice));
             }
+            homeContentVersion++;
+        }
+
+        void simulateReferenceSend() {
+            double amount = Math.min(sendAmount, sendAssetBalance());
+            double feeAmount = estimatedNetworkFeeAmount(sendNetwork, amount);
+            double feeFiat = estimatedNetworkFeeFiat(sendNetwork, amount);
+            if ("TRX".equals(sendAssetSymbol)) {
+                homeBalance.trx = Math.max(0d, homeBalance.trx - amount);
+            } else if ("USDT_TON".equals(sendAssetSymbol)) {
+                homeBalance.usdtTon = Math.max(0d, homeBalance.usdtTon - amount);
+            } else {
+                homeBalance.usdtTron = Math.max(0d, homeBalance.usdtTron - amount);
+            }
+            addDevTx(true, "Отправлено", "В: " + ellipsizeAddress(sendAddress), "-" + amountLabel(amount, 6) + " " + sendAssetDisplay(sendAssetSymbol), "≈ $" + moneyLabel(amount * sendAssetPrice()));
+            selectedTx = devHistory.isEmpty() ? null : devHistory.get(0);
+            if (selectedTx != null) {
+                selectedTx.rawAddress = sendAddress;
+                selectedTx.network = sendNetwork;
+                selectedTx.feeAmount = amountLabel(feeAmount, 8) + " " + networkFeeSymbol(sendNetwork);
+                selectedTx.feeFiat = "≈ $" + moneyLabel(feeFiat);
+            }
+            homeContentVersion++;
         }
 
         void simulateReceive(String symbol, double amount) {
             if ("TRX".equals(symbol)) {
                 homeBalance.trx += amount;
                 addDevTx(false, "Получено", "Из: TEST...RCV", "+" + amountLabel(amount, 4) + " TRX", "≈ $" + moneyLabel(amount * homeBalance.trxPrice));
+            } else if ("USDT_TON".equals(symbol)) {
+                homeBalance.usdtTon += amount;
+                addDevTx(false, "Получено", "Из: TEST...RCV", "+" + amountLabel(amount, 2) + " USDT TON", "≈ $" + moneyLabel(amount * homeBalance.tonUsdtPrice));
             } else if ("USDT".equals(symbol)) {
                 homeBalance.usdtTron += amount;
                 addDevTx(false, "Получено", "Из: TEST...RCV", "+" + amountLabel(amount, 2) + " USDT", "≈ $" + moneyLabel(amount * homeBalance.usdtPrice));
             }
+            homeContentVersion++;
         }
 
         void addDevTx(boolean sent, String title, String address, String amount, String fiat) {
@@ -2290,8 +3156,15 @@ public class MainActivity extends Activity {
             tx.amount = amount;
             tx.fiat = fiat;
             tx.positive = !sent;
+            tx.rawAddress = address.replaceFirst("^В: ", "").replaceFirst("^Из: ", "");
             devHistory.add(0, tx);
             while (devHistory.size() > 6) devHistory.remove(devHistory.size() - 1);
+        }
+
+        String txRawAddress(DevTx tx) {
+            if (tx == null) return "";
+            if (tx.rawAddress != null && tx.rawAddress.length() > 0) return tx.rawAddress;
+            return tx.address == null ? "" : tx.address.replaceFirst("^В: ", "").replaceFirst("^Из: ", "");
         }
 
         static String amountLabel(double value, int maxDecimals) {
@@ -2420,35 +3293,19 @@ public class MainActivity extends Activity {
         }
 
         void drawTradeIcon(Canvas canvas, float cx, float cy, int icon) {
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(5);
-            paint.setStrokeCap(Paint.Cap.ROUND);
-            paint.setStrokeJoin(Paint.Join.ROUND);
-            paint.setColor(GREEN);
+            rect(canvas, cx - 52, cy - 52, 104, 104, Color.rgb(32, 33, 36), 30);
             if (icon == 0) {
-                canvas.drawArc(new RectF(cx - 28, cy - 28, cx + 28, cy + 28), -30, 245, false, paint);
-                canvas.drawLine(cx + 26, cy - 12, cx + 42, cy - 18, paint);
-                canvas.drawLine(cx + 26, cy - 12, cx + 28, cy - 30, paint);
-                canvas.drawArc(new RectF(cx - 28, cy - 28, cx + 28, cy + 28), 150, 245, false, paint);
-                canvas.drawLine(cx - 26, cy + 12, cx - 42, cy + 18, paint);
-                canvas.drawLine(cx - 26, cy + 12, cx - 28, cy + 30, paint);
-            } else if (icon == 1) {
-                canvas.drawLine(cx, cy - 36, cx, cy + 32, paint);
-                canvas.drawLine(cx - 32, cy, cx + 32, cy, paint);
-                canvas.drawCircle(cx - 32, cy, 8, paint);
-                canvas.drawCircle(cx + 32, cy, 8, paint);
-                canvas.drawCircle(cx, cy - 36, 8, paint);
-                canvas.drawCircle(cx, cy + 32, 8, paint);
-            } else {
-                canvas.drawRoundRect(new RectF(cx - 34, cy - 28, cx + 34, cy + 24), 6, 6, paint);
-                canvas.drawLine(cx - 20, cy + 36, cx + 20, cy + 36, paint);
-                canvas.drawLine(cx, cy + 24, cx, cy + 36, paint);
-                canvas.drawLine(cx - 18, cy - 2, cx - 4, cy + 12, paint);
-                canvas.drawLine(cx - 4, cy + 12, cx + 22, cy - 15, paint);
+                drawBmpTint(canvas, "assets/native-ui/qa-swap-icon.png", cx - 36, cy - 36, 72, 72, GREEN);
+                return;
             }
-            paint.setStrokeCap(Paint.Cap.BUTT);
-            paint.setStrokeJoin(Paint.Join.MITER);
-            paint.setStyle(Paint.Style.FILL);
+            if (icon == 1) {
+                drawCircularBmp(canvas, "assets/coins/0.webp", cx - 40, cy - 34, 58);
+                drawCircularBmp(canvas, "assets/coins/60.webp", cx - 4, cy - 10, 58);
+                drawSparklineBadge(canvas, cx + 32, cy - 28, GREEN);
+                return;
+            }
+            drawCircularBmp(canvas, "assets/coins/59144.webp", cx - 38, cy - 36, 58);
+            drawSparklineBadge(canvas, cx + 28, cy + 26, GREEN);
         }
 
         void tokenOption(Canvas canvas, float y, MarketCoin coin) {
@@ -2621,7 +3478,53 @@ public class MainActivity extends Activity {
             drawStatus(canvas);
             canvas.save();
             canvas.clipRect(0, 102, 1080, NAV_TOP);
-            canvas.translate(0, -scrollY);
+            drawHomeContentCache(canvas);
+            canvas.restore();
+            if (scrollY > 1240f) {
+                canvas.save();
+                canvas.clipRect(0, 102, 1080, NAV_TOP);
+                rect(canvas, 0, 102, 1080, 270, BG, 0);
+                canvas.translate(0, -1240);
+                drawHomeAssetTabs(canvas);
+                canvas.restore();
+            }
+            drawHomeScrollIndicator(canvas);
+            drawModernBottomNav(canvas, 0);
+        }
+
+        void drawHomeContentCache(Canvas canvas) {
+            Bitmap cache = ensureHomeContentCache();
+            if (cache == null) {
+                canvas.translate(0, -scrollY);
+                drawHomeScrollableContent(canvas);
+                return;
+            }
+            int top = Math.max(0, Math.min(HOME_CACHE_H - (NAV_TOP - 102), Math.round(102 + scrollY)));
+            Rect src = new Rect(0, top, BASE_W, top + (NAV_TOP - 102));
+            RectF dst = new RectF(0, 102, BASE_W, NAV_TOP);
+            canvas.drawBitmap(cache, src, dst, paint);
+        }
+
+        Bitmap ensureHomeContentCache() {
+            String key = assetTab + ":" + marketDataVersion + ":" + homeContentVersion;
+            if (homeContentCache != null && key.equals(homeContentCacheKey)) return homeContentCache;
+            try {
+                if (homeContentCache == null || homeContentCache.getWidth() != BASE_W || homeContentCache.getHeight() != HOME_CACHE_H) {
+                    if (homeContentCache != null) homeContentCache.recycle();
+                    homeContentCache = Bitmap.createBitmap(BASE_W, HOME_CACHE_H, Bitmap.Config.ARGB_8888);
+                }
+                Canvas cacheCanvas = new Canvas(homeContentCache);
+                rect(cacheCanvas, 0, 0, BASE_W, HOME_CACHE_H, BG, 0);
+                drawHomeScrollableContent(cacheCanvas);
+                homeContentCacheKey = key;
+            } catch (Throwable ignored) {
+                homeContentCacheKey = "";
+                return null;
+            }
+            return homeContentCache;
+        }
+
+        void drawHomeScrollableContent(Canvas canvas) {
             drawHomeTop(canvas);
             if (assetTab == 1) {
                 drawHomeAssetTabs(canvas);
@@ -2635,17 +3538,6 @@ public class MainActivity extends Activity {
                 drawHomeAssets(canvas);
                 drawHomeBelowAssets(canvas, 2110);
             }
-            canvas.restore();
-            if (scrollY > 1240f) {
-                canvas.save();
-                canvas.clipRect(0, 102, 1080, NAV_TOP);
-                rect(canvas, 0, 102, 1080, 270, BG, 0);
-                canvas.translate(0, -1240);
-                drawHomeAssetTabs(canvas);
-                canvas.restore();
-            }
-            drawHomeScrollIndicator(canvas);
-            drawModernBottomNav(canvas, 0);
         }
 
         void drawHomeScrollIndicator(Canvas canvas) {
@@ -2748,49 +3640,69 @@ public class MainActivity extends Activity {
         }
 
         void homeAction(Canvas canvas, float cx, float y, int icon, String label, boolean primary) {
-            int fill = primary ? GREEN : Color.rgb(36, 36, 39);
-            int glyph = primary ? Color.rgb(10, 22, 15) : TEXT;
-            rect(canvas, cx - 76, y, 152, 152, fill, 35);
-            drawHomeActionIcon(canvas, cx, y + 76, icon, glyph);
-            textTyped(canvas, label, cx, y + 201, 34, TEXT, Paint.Align.CENTER, fontTextSemiBold, false, 600);
+            String asset = icon == 0 ? "assets/native-ui/qa-send.png" :
+                    icon == 1 ? "assets/native-ui/qa-receive.png" :
+                    icon == 2 ? "assets/native-ui/qa-swap-active.png" :
+                    "assets/native-ui/qa-buy.png";
+            drawBmp(canvas, asset, cx - 104, y - 5, 208, 225);
         }
 
         void drawHomeActionIcon(Canvas canvas, float cx, float cy, int icon, int color) {
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(6.2f);
+            paint.setStrokeWidth(7.6f);
             paint.setStrokeCap(Paint.Cap.ROUND);
             paint.setStrokeJoin(Paint.Join.ROUND);
             paint.setColor(color);
             if (icon == 0) {
-                canvas.drawLine(cx - 27, cy + 27, cx + 27, cy - 27, paint);
-                canvas.drawLine(cx - 1, cy - 29, cx + 29, cy - 29, paint);
-                canvas.drawLine(cx + 29, cy - 29, cx + 29, cy + 1, paint);
+                drawTransferArrowGlyph(canvas, cx, cy, 0, color, 1.08f);
             } else if (icon == 1) {
-                canvas.drawLine(cx, cy - 33, cx, cy + 29, paint);
-                canvas.drawLine(cx - 23, cy + 6, cx, cy + 29, paint);
-                canvas.drawLine(cx + 23, cy + 6, cx, cy + 29, paint);
+                drawTransferArrowGlyph(canvas, cx, cy, 1, color, 1.05f);
             } else if (icon == 2) {
-                paint.setStrokeWidth(5.7f);
-                Path top = new Path();
-                top.moveTo(cx - 29, cy - 3);
-                top.cubicTo(cx - 24, cy - 27, cx + 10, cy - 33, cx + 27, cy - 12);
-                canvas.drawPath(top, paint);
-                canvas.drawLine(cx + 27, cy - 12, cx + 27, cy - 29, paint);
-                canvas.drawLine(cx + 27, cy - 12, cx + 10, cy - 12, paint);
-                Path bottom = new Path();
-                bottom.moveTo(cx + 29, cy + 3);
-                bottom.cubicTo(cx + 24, cy + 27, cx - 10, cy + 33, cx - 27, cy + 12);
-                canvas.drawPath(bottom, paint);
-                canvas.drawLine(cx - 27, cy + 12, cx - 27, cy + 29, paint);
-                canvas.drawLine(cx - 27, cy + 12, cx - 10, cy + 12, paint);
+                drawSwapActionGlyph(canvas, cx, cy, color, 1.04f);
             } else {
-                paint.setStrokeWidth(6.2f);
-                canvas.drawLine(cx - 31, cy, cx + 31, cy, paint);
-                canvas.drawLine(cx, cy - 31, cx, cy + 31, paint);
+                paint.setStrokeWidth(7.2f);
+                canvas.drawLine(cx - 33, cy, cx + 33, cy, paint);
+                canvas.drawLine(cx, cy - 33, cx, cy + 33, paint);
             }
             paint.setStrokeCap(Paint.Cap.BUTT);
             paint.setStrokeJoin(Paint.Join.MITER);
             paint.setStyle(Paint.Style.FILL);
+        }
+
+        void drawTransferArrowGlyph(Canvas canvas, float cx, float cy, int direction, int color, float scale) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(7.2f * scale);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setStrokeJoin(Paint.Join.ROUND);
+            paint.setColor(color);
+            if (direction == 0) {
+                canvas.drawLine(cx - 28 * scale, cy + 28 * scale, cx + 28 * scale, cy - 28 * scale, paint);
+                canvas.drawLine(cx - 2 * scale, cy - 30 * scale, cx + 30 * scale, cy - 30 * scale, paint);
+                canvas.drawLine(cx + 30 * scale, cy - 30 * scale, cx + 30 * scale, cy + 2 * scale, paint);
+            } else if (direction == 1) {
+                canvas.drawLine(cx, cy - 35 * scale, cx, cy + 30 * scale, paint);
+                canvas.drawLine(cx - 24 * scale, cy + 6 * scale, cx, cy + 30 * scale, paint);
+                canvas.drawLine(cx + 24 * scale, cy + 6 * scale, cx, cy + 30 * scale, paint);
+            } else {
+                canvas.drawLine(cx + 28 * scale, cy - 28 * scale, cx - 28 * scale, cy + 28 * scale, paint);
+                canvas.drawLine(cx - 30 * scale, cy - 2 * scale, cx - 30 * scale, cy + 30 * scale, paint);
+                canvas.drawLine(cx - 30 * scale, cy + 30 * scale, cx + 2 * scale, cy + 30 * scale, paint);
+            }
+        }
+
+        void drawSwapActionGlyph(Canvas canvas, float cx, float cy, int color, float scale) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(6.8f * scale);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setStrokeJoin(Paint.Join.ROUND);
+            paint.setColor(color);
+            RectF bounds = new RectF(cx - 33 * scale, cy - 33 * scale, cx + 33 * scale, cy + 33 * scale);
+            canvas.drawArc(bounds, 205, 205, false, paint);
+            canvas.drawLine(cx + 22 * scale, cy - 28 * scale, cx + 35 * scale, cy - 18 * scale, paint);
+            canvas.drawLine(cx + 22 * scale, cy - 8 * scale, cx + 35 * scale, cy - 18 * scale, paint);
+            canvas.drawArc(bounds, 25, 205, false, paint);
+            canvas.drawLine(cx - 22 * scale, cy + 28 * scale, cx - 35 * scale, cy + 18 * scale, paint);
+            canvas.drawLine(cx - 22 * scale, cy + 8 * scale, cx - 35 * scale, cy + 18 * scale, paint);
         }
 
         void drawSettingsGlyph(Canvas canvas, float cx, float cy, int color, float scale) {
@@ -3152,9 +4064,7 @@ public class MainActivity extends Activity {
 
         void homePerpsCard(Canvas canvas, float x, float y, String symbol, String vol) {
             rect(canvas, x, y, 360, 255, PANEL, 28);
-            MarketCoin coin = null;
-            for (MarketCoin c : homeSnapshotCoins()) if (symbol.equals(c.symbol)) coin = c;
-            if (coin != null) drawTokenIcon(canvas, coin, x + 44, y + 42, 76);
+            drawTokenIcon(canvas, coinBySymbol(symbol), x + 44, y + 42, 76);
             text(canvas, symbol, x + 135, y + 92, 38, TEXT, Paint.Align.LEFT, true);
             text(canvas, "Торгуйте " + symbol + " с", x + 44, y + 150, 27, MUTED, Paint.Align.LEFT, true);
             text(canvas, "кредитным плечом", x + 44, y + 188, 27, MUTED, Paint.Align.LEFT, true);
@@ -3164,7 +4074,10 @@ public class MainActivity extends Activity {
 
         void earnCard(Canvas canvas, float x, float y, String icon, String line1, String line2, String line3) {
             rect(canvas, x, y, 360, 290, PANEL, 28);
-            text(canvas, icon, x + 70, y + 78, 58, GREEN, Paint.Align.CENTER, true);
+            String symbol = x < 100 ? "ATOM" : "SOL";
+            drawTokenIcon(canvas, coinBySymbol(symbol), x + 44, y + 36, 82);
+            rect(canvas, x + 98, y + 82, 54, 34, Color.rgb(24, 58, 42), 17);
+            text(canvas, "APY", x + 125, y + 106, 18, GREEN, Paint.Align.CENTER, true);
             text(canvas, line1, x + 44, y + 175, 34, TEXT, Paint.Align.LEFT, true);
             text(canvas, line2, x + 44, y + 222, 34, TEXT, Paint.Align.LEFT, true);
             text(canvas, line3, x + 44, y + 266, 30, MUTED, Paint.Align.LEFT, true);
@@ -3268,7 +4181,16 @@ public class MainActivity extends Activity {
         void drawRewardsActive(Canvas canvas) {
             rect(canvas, 44, 1340, 992, 520, PANEL, 36);
             rect(canvas, 92, 1400, 185, 150, Color.rgb(45, 74, 86), 24);
-            text(canvas, "▱", 184, 1502, 86, GREEN, Paint.Align.CENTER, true);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(6);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setColor(GREEN);
+            canvas.drawLine(155, 1485, 215, 1485, paint);
+            canvas.drawLine(215, 1485, 205, 1514, paint);
+            canvas.drawLine(205, 1514, 145, 1514, paint);
+            canvas.drawLine(145, 1514, 155, 1485, paint);
+            paint.setStrokeCap(Paint.Cap.BUTT);
+            paint.setStyle(Paint.Style.FILL);
             text(canvas, "Новые кампании скоро", 350, 1435, 34, MUTED, Paint.Align.LEFT, true);
             text(canvas, "Подпишитесь на нас в", 350, 1500, 44, TEXT, Paint.Align.LEFT, true);
             text(canvas, "социальных сетях и", 350, 1554, 44, TEXT, Paint.Align.LEFT, true);
@@ -3286,20 +4208,68 @@ public class MainActivity extends Activity {
         }
 
         void drawRewardsPast(Canvas canvas) {
-            rewardCard(canvas, 44, 1340, Color.rgb(0, 100, 72), "Tunz", "3GB", "Free 3GB Global eSIM", "(7 days) with Tunz", "1000XP");
-            rewardCard(canvas, 532, 1340, Color.rgb(238, 45, 120), "U", "$50", "$50 hotel coupon", "with Umy", "800XP");
-            rewardCard(canvas, 1020, 1340, Color.rgb(38, 150, 200), "4", "weeks", "Travel reward", "", "400XP");
+            rewardCard(canvas, 44, 1340, Color.rgb(0, 100, 72), 0, "3GB", "Free 3GB Global eSIM", "(7 days) with Tunz", "1000XP");
+            rewardCard(canvas, 532, 1340, Color.rgb(238, 45, 120), 1, "$50", "$50 hotel coupon", "with Umy", "800XP");
+            rewardCard(canvas, 1020, 1340, Color.rgb(38, 150, 200), 2, "4", "Travel reward", "", "400XP");
         }
 
-        void rewardCard(Canvas canvas, float x, float y, int color, String brand, String value, String title, String subtitle, String xp) {
+        void rewardCard(Canvas canvas, float x, float y, int color, int style, String value, String title, String subtitle, String xp) {
             rect(canvas, x, y, 460, 300, color, 32);
-            text(canvas, brand, x + 230, y + 120, 58, TEXT, Paint.Align.CENTER, true);
-            text(canvas, value, x + 230, y + 210, 56, TEXT, Paint.Align.CENTER, true);
+            drawRewardBrandArt(canvas, x, y, style);
+            text(canvas, value, x + 230, y + 225, 56, TEXT, Paint.Align.CENTER, true);
             text(canvas, title, x, y + 350, 36, TEXT, Paint.Align.LEFT, true);
             if (subtitle != null && subtitle.length() > 0) text(canvas, subtitle, x, y + 397, 36, TEXT, Paint.Align.LEFT, true);
             text(canvas, xp, x, y + 500, 44, TEXT, Paint.Align.LEFT, true);
             rect(canvas, x, y + 548, 460, 92, Color.rgb(25, 78, 49), 46);
             text(canvas, "Посмотреть", x + 230, y + 607, 36, GREEN, Paint.Align.CENTER, true);
+        }
+
+        void drawRewardBrandArt(Canvas canvas, float x, float y, int style) {
+            float cx = x + 230;
+            float cy = y + 110;
+            if (style == 0) {
+                rect(canvas, cx - 82, cy - 58, 164, 116, Color.WHITE, 28);
+                paint.setStyle(Paint.Style.FILL);
+                paint.setColor(Color.rgb(0, 180, 135));
+                canvas.drawCircle(cx - 38, cy - 10, 34, paint);
+                paint.setColor(Color.rgb(0, 115, 92));
+                canvas.drawCircle(cx + 24, cy - 4, 42, paint);
+                paint.setColor(Color.rgb(105, 235, 198));
+                canvas.drawCircle(cx + 54, cy - 32, 18, paint);
+                paint.setColor(Color.rgb(0, 100, 72));
+                canvas.drawRoundRect(new RectF(cx - 58, cy + 28, cx + 58, cy + 48), 10, 10, paint);
+                return;
+            }
+            if (style == 1) {
+                rect(canvas, cx - 92, cy - 62, 184, 124, Color.WHITE, 26);
+                paint.setShader(new LinearGradient(cx - 92, cy - 62, cx + 92, cy + 62,
+                        Color.rgb(255, 85, 145), Color.rgb(255, 188, 65), Shader.TileMode.CLAMP));
+                canvas.drawRoundRect(new RectF(cx - 78, cy - 48, cx + 78, cy + 48), 22, 22, paint);
+                paint.setShader(null);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(7);
+                paint.setStrokeCap(Paint.Cap.ROUND);
+                paint.setColor(Color.WHITE);
+                canvas.drawArc(new RectF(cx - 44, cy - 34, cx + 44, cy + 34), 25, 310, false, paint);
+                canvas.drawLine(cx + 28, cy + 22, cx + 50, cy + 42, paint);
+                paint.setStrokeCap(Paint.Cap.BUTT);
+                paint.setStyle(Paint.Style.FILL);
+                return;
+            }
+            rect(canvas, cx - 92, cy - 62, 184, 124, Color.WHITE, 26);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.rgb(55, 168, 230));
+            canvas.drawCircle(cx - 36, cy - 10, 42, paint);
+            paint.setColor(Color.rgb(120, 225, 255));
+            canvas.drawCircle(cx + 42, cy - 20, 32, paint);
+            paint.setColor(Color.rgb(22, 105, 180));
+            Path plane = new Path();
+            plane.moveTo(cx - 50, cy + 38);
+            plane.lineTo(cx + 66, cy - 28);
+            plane.lineTo(cx + 28, cy + 46);
+            plane.lineTo(cx + 10, cy + 12);
+            plane.close();
+            canvas.drawPath(plane, paint);
         }
 
         void rewardsTab(Canvas canvas, float x, float y, String label, boolean active) {
@@ -3318,7 +4288,7 @@ public class MainActivity extends Activity {
         void drawHistory(Canvas canvas) {
             rect(canvas, 0, 0, BASE_W, BASE_H, BG, 0);
             drawStatus(canvas);
-            drawBackArrow(canvas, 78, 185, MUTED, 1f);
+            drawBmpRegion(canvas, "assets/native-ui/left.png", 493, 313, 1024, 687, 43, 151, 76, 54);
             text(canvas, "История транзакций", 540, 185, 48, TEXT, Paint.Align.CENTER, true);
 
             canvas.save();
@@ -3333,12 +4303,23 @@ public class MainActivity extends Activity {
 
             float y0 = 500;
             if (!devHistory.isEmpty()) {
-                text(canvas, "Тестовые операции", 44, y0, 42, TEXT, Paint.Align.LEFT, true);
+                text(canvas, "Сегодня", 44, y0, 42, TEXT, Paint.Align.LEFT, true);
+                float rowY = y0 + 112;
                 for (int i = 0; i < devHistory.size(); i++) {
                     DevTx tx = devHistory.get(i);
-                    historyTxRow(canvas, y0 + 112 + i * 203, tx.sent, tx.title, tx.address, tx.amount, tx.fiat, tx.positive);
+                    historyTxRow(canvas, rowY, tx.sent, tx.title, tx.address, tx.amount, tx.fiat, tx.positive);
+                    if (i == 0 && tx.sent) {
+                        historyExplorerHint(canvas, 44, rowY + 112);
+                        rowY += 360;
+                    } else {
+                        rowY += 203;
+                    }
                 }
-                y0 += 172 + devHistory.size() * 203;
+                y0 = rowY + 60;
+            } else {
+                text(canvas, "Сегодня", 44, y0, 42, TEXT, Paint.Align.LEFT, true);
+                historyTxRow(canvas, y0 + 112, false, "Получено", "Из: 0xA711...9fF6A", "+2.04 USDT", "≈ $2.04", true);
+                y0 += 282;
             }
 
             text(canvas, "22 мая 2026 г.", 44, y0, 42, TEXT, Paint.Align.LEFT, true);
@@ -3359,7 +4340,7 @@ public class MainActivity extends Activity {
         }
 
         void historyTxRow(Canvas canvas, float y, boolean sent, String title, String address, String amount, String fiat, boolean positive) {
-            rect(canvas, 44, y - 56, 108, 108, Color.rgb(48, 49, 52), 54);
+            rect(canvas, 44, y - 56, 108, 108, Color.rgb(46, 47, 51), 54);
             drawTxArrow(canvas, 98, y, sent, MUTED);
             text(canvas, title, 186, y - 10, 40, TEXT, Paint.Align.LEFT, true);
             text(canvas, address, 186, y + 40, 32, MUTED, Paint.Align.LEFT, true);
@@ -3381,18 +4362,18 @@ public class MainActivity extends Activity {
 
         void drawTxArrow(Canvas canvas, float cx, float cy, boolean up, int color) {
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(6);
+            paint.setStrokeWidth(4.8f);
             paint.setStrokeCap(Paint.Cap.ROUND);
             paint.setStrokeJoin(Paint.Join.ROUND);
             paint.setColor(color);
             if (up) {
-                canvas.drawLine(cx, cy + 34, cx, cy - 30, paint);
-                canvas.drawLine(cx - 24, cy - 8, cx, cy - 32, paint);
-                canvas.drawLine(cx + 24, cy - 8, cx, cy - 32, paint);
+                canvas.drawLine(cx, cy + 24, cx, cy - 24, paint);
+                canvas.drawLine(cx - 17, cy - 7, cx, cy - 24, paint);
+                canvas.drawLine(cx + 17, cy - 7, cx, cy - 24, paint);
             } else {
-                canvas.drawLine(cx, cy - 34, cx, cy + 30, paint);
-                canvas.drawLine(cx - 24, cy + 8, cx, cy + 32, paint);
-                canvas.drawLine(cx + 24, cy + 8, cx, cy + 32, paint);
+                canvas.drawLine(cx, cy - 24, cx, cy + 24, paint);
+                canvas.drawLine(cx - 17, cy + 7, cx, cy + 24, paint);
+                canvas.drawLine(cx + 17, cy + 7, cx, cy + 24, paint);
             }
             paint.setStrokeCap(Paint.Cap.BUTT);
             paint.setStrokeJoin(Paint.Join.MITER);
@@ -3613,8 +4594,12 @@ public class MainActivity extends Activity {
             boolean positive;
             String title;
             String address;
+            String rawAddress;
             String amount;
             String fiat;
+            String network;
+            String feeAmount;
+            String feeFiat;
         }
     }
 }

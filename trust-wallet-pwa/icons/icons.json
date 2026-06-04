@@ -1,0 +1,13 @@
+{
+  "nativeUi": {
+    "topSettings": "assets/native-ui/top-settings.png",
+    "topSearchPill": "assets/native-ui/top-search-pill.png",
+    "topScan": "assets/native-ui/top-scan.png",
+    "walletChip": "assets/native-ui/wallet-chip.png",
+    "copyButton": "assets/native-ui/copy-button.png",
+    "quickActionSend": "assets/native-ui/qa-send.png",
+    "quickActionReceive": "assets/native-ui/qa-receive.png",
+    "quickActionSwapActive": "assets/native-ui/qa-swap-active.png",
+    "quickActionBuy": "assets/native-ui/qa-buy.png"
+  }
+}
